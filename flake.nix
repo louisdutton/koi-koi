@@ -37,7 +37,7 @@
         { pkgs }:
         {
           default = pkgs.mkShell {
-            packages = inputs pkgs;
+            packages = inputs pkgs ++ (with pkgs; [ lldb ]);
           };
         }
       );
