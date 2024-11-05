@@ -1,0 +1,4 @@
+# artifacts
+*.bin
+result
+.direnv
