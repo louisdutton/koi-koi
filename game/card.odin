@@ -15,7 +15,7 @@ colors := [8]r.Color{r.BLUE, r.GREEN, r.GREEN, r.RED, r.YELLOW, r.YELLOW, r.BLUE
 
 draw_player_hand :: proc() {
 	for i in 0 ..< HAND_SIZE {
-		if i != selected {
+		if i != selected_card {
 			x := PADDING + i32((HORIZONTAL_SPACING + PADDING) * i)
 			y := i32(SCREEN_HEIGHT - PADDING - CARD_HEIGHT)
 			draw_card(x, y, colors[i])
@@ -23,9 +23,19 @@ draw_player_hand :: proc() {
 	}
 
 	// always draw selected card on top
-	x := PADDING + i32((HORIZONTAL_SPACING + PADDING) * selected)
-	y := i32(SCREEN_HEIGHT - PADDING - CARD_HEIGHT - SELECTED_VERTICAL_OFFSET)
-	draw_card(x, y, colors[selected])
+	x: i32
+	y: i32
+
+	if (is_dragging) {
+		pos := r.GetMousePosition()
+		x = i32(pos.x) - CARD_WIDTH / 2
+		y = i32(pos.y) - CARD_HEIGHT / 2
+	} else {
+		x = PADDING + i32((HORIZONTAL_SPACING + PADDING) * selected_card)
+		y = i32(SCREEN_HEIGHT - PADDING - CARD_HEIGHT - SELECTED_VERTICAL_OFFSET)
+	}
+
+	draw_card(x, y, colors[selected_card])
 	draw_card_outline(x, y)
 }
 
