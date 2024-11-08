@@ -10,20 +10,9 @@ DOWN :: r.KeyboardKey.J
 LEFT :: r.KeyboardKey.H
 RIGHT :: r.KeyboardKey.L
 
-// card counts
-INITIAL_HAND :: 8
-MONTH_SIZE :: 4
-MONTH_COUNT :: 12
-DECK_SIZE :: MONTH_SIZE * MONTH_COUNT
-
 // state
 selection := 0
 is_dragging := false
-
-// collections
-hand := [dynamic]Color{r.BLUE, r.GREEN, r.GREEN, r.RED, r.YELLOW, r.YELLOW, r.BLUE, r.RED}
-table := [dynamic]Color{r.BLUE, r.GREEN, r.GREEN, r.RED, r.YELLOW, r.YELLOW, r.BLUE, r.RED}
-opponent := [dynamic]Color{r.BLUE, r.GREEN, r.GREEN, r.RED, r.YELLOW, r.YELLOW, r.BLUE, r.RED}
 
 update :: proc() {
 	switch state {
@@ -37,8 +26,7 @@ update :: proc() {
 
 		if r.IsKeyPressed(.ENTER) {
 			for card, i in table {
-				current := hand[selection]
-				if card == current {
+				if card / 12 == hand[selection] / 12 {
 					defer ordered_remove(&table, i)
 					defer unordered_remove(&hand, selection)
 					if selection == len(hand) - 1 {

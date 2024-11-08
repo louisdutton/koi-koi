@@ -6,7 +6,6 @@ PADDING :: 10
 FONT_SIZE :: 40
 TEXT_COLOUR :: r.WHITE
 
-
 draw :: proc() {
 	r.BeginDrawing()
 	defer r.EndDrawing()

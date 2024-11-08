@@ -23,6 +23,8 @@ main :: proc() {
 	r.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Koi-Koi")
 	defer r.CloseWindow()
 
+	init()
+
 	for !r.WindowShouldClose() { 	// Detect window close button or ESC key
 		update()
 		draw()
