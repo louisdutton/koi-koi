@@ -1,5 +1,5 @@
 #+vet !using-stmt !using-param
-package main
+package docs
 
 import "base:intrinsics"
 import "base:runtime"
