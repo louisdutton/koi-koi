@@ -25,6 +25,7 @@ draw :: proc() {
 
 draw_play :: proc() {
 	draw_player_hand()
+	draw_table()
 	draw_opponent_hand()
 }
 

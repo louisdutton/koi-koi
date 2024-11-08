@@ -5,14 +5,20 @@ import "core:time"
 import r "vendor:raylib"
 
 HAND_SIZE :: 8
+MONTH_SIZE :: 4
+MONTH_COUNT :: 12
+DECK_SIZE :: MONTH_SIZE * MONTH_COUNT
 
+// ui state
 selected_card := 0
-
-Vec2 :: distinct [2]int
 
 // drag and drop
 is_dragging := false
-card_position := Vec2{0, 0}
+
+// collections
+hand := []Color{r.BLUE, r.GREEN, r.GREEN, r.RED, r.YELLOW, r.YELLOW, r.BLUE, r.RED}
+table := []Color{r.BLUE, r.GREEN, r.GREEN, r.RED, r.YELLOW, r.YELLOW, r.BLUE, r.RED}
+opponent := []Color{r.BLUE, r.GREEN, r.GREEN, r.RED, r.YELLOW, r.YELLOW, r.BLUE, r.RED}
 
 update :: proc() {
 
