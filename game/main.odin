@@ -6,11 +6,6 @@ import r "vendor:raylib"
 SCREEN_WIDTH :: 800
 SCREEN_HEIGHT :: 450
 
-UP :: r.KeyboardKey.K
-DOWN :: r.KeyboardKey.J
-LEFT :: r.KeyboardKey.H
-RIGHT :: r.KeyboardKey.L
-
 FPS :: 60
 
 GameState :: enum u8 {

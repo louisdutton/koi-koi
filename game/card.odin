@@ -16,7 +16,7 @@ OUTLINE_THICKNESS :: 3
 
 draw_player_hand :: proc() {
 	for col, i in hand {
-		if i != selected_card {
+		if i != selection {
 			draw_card(
 				r.Vector2 {
 					f32(PADDING + (HAND_SPACING * i)),
@@ -32,17 +32,17 @@ draw_player_hand :: proc() {
 		pos = r.GetMousePosition() - CARD_SIZE / 2
 	} else {
 		pos = r.Vector2 {
-			f32(PADDING + (HAND_SPACING * selected_card)),
+			f32(PADDING + (HAND_SPACING * selection)),
 			SCREEN_HEIGHT - PADDING - CARD_SIZE.y - SELECTED_VERTICAL_OFFSET,
 		}
 	}
 
-	draw_card(pos, hand[selected_card])
+	draw_card(pos, hand[selection])
 	draw_card_outline(pos)
 }
 
 draw_opponent_hand :: proc() {
-	for i in 0 ..< HAND_SIZE {
+	for col, i in opponent {
 		pos := r.Vector2{f32(PADDING + (HAND_SPACING + PADDING) * i), PADDING}
 		r.DrawRectangleV(pos, CARD_SIZE, r.BLACK)
 	}
