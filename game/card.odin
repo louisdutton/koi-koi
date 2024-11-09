@@ -54,9 +54,11 @@ draw_opponent_hand :: proc() {
 
 draw_table :: proc() {
 	for card, i in table {
+		border_colour := matches_selected(card) ? OUTLINE_COLOUR : r.BLACK
 		draw_card(
 			Vec2{f32(PADDING + (TABLE_SPACING) * i), SCREEN_HEIGHT / 2 - CARD_SIZE.y / 2},
 			card,
+			border_colour,
 		)
 	}
 }
@@ -71,8 +73,8 @@ draw_deck :: proc() {
 	}
 }
 
-draw_card :: proc(pos: Vec2, card: Card) {
-	r.DrawRectangleV(pos, CARD_SIZE, r.BLACK)
+draw_card :: proc(pos: Vec2, card: Card, border := r.BLACK) {
+	r.DrawRectangleV(pos, CARD_SIZE, border)
 	r.DrawRectangleV(pos + CARD_BORDER_WIDTH, CARD_SIZE - CARD_BORDER_WIDTH * 2, r.WHITE)
 
 	// card number

@@ -26,7 +26,7 @@ update :: proc() {
 
 		if r.IsKeyPressed(.ENTER) {
 			for card, i in table {
-				if card / 12 == hand[selection] / 12 {
+				if matches_selected(card) {
 					defer ordered_remove(&table, i)
 					defer unordered_remove(&hand, selection)
 					if selection == len(hand) - 1 {
@@ -43,4 +43,8 @@ update :: proc() {
 	case .GameOver:
 		if r.IsKeyPressed(.ENTER) {state = .Play}
 	}
+}
+
+matches_selected :: proc(card: Card) -> bool {
+	return card / 12 == hand[selection] / 12
 }
