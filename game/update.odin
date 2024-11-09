@@ -34,28 +34,37 @@ update :: proc() {
 
 		switch play_state {
 		case .Choose_Hand:
-			if r.IsMouseButtonPressed(.LEFT) {is_dragging = true}
-			if r.IsMouseButtonReleased(.LEFT) {is_dragging = false}
-			if r.IsKeyPressed(LEFT) {selection_hand = max(selection_hand - 1, 0)}
-			if r.IsKeyPressed(RIGHT) {selection_hand = min(selection_hand + 1, len(hand) - 1)}
-			if r.IsKeyPressed(.ENTER) {
+			switch {
+			case r.IsMouseButtonPressed(.LEFT):
+				is_dragging = true
+			case r.IsMouseButtonReleased(.LEFT):
+				is_dragging = false
+			case r.IsKeyPressed(LEFT):
+				selection_hand = max(selection_hand - 1, 0)
+			case r.IsKeyPressed(RIGHT):
+				selection_hand = min(selection_hand + 1, len(hand) - 1)
+			case r.IsKeyPressed(.ENTER):
 				matches = get_matches()
-				switch len(matches) {
-				case 1:
+				count := len(matches)
+				switch {
+				case count == 1:
 					match(matches[0])
-				case 2 ..= 3:
+				case count >= 2:
 					play_state = .Choose_Table
 				}
 			}
+
 		case .Choose_Table:
-			if r.IsKeyPressed(LEFT) {selection_match = max(selection_match - 1, 0)}
-			if r.IsKeyPressed(RIGHT) {
+			switch {
+			case r.IsKeyPressed(LEFT):
+				selection_match = max(selection_match - 1, 0)
+			case r.IsKeyPressed(RIGHT):
 				selection_match = min(selection_match + 1, len(matches) - 1)
-			}
-			if r.IsKeyPressed(.ENTER) {
+			case r.IsKeyPressed(.ENTER):
 				match(matches[selection_match])
 				play_state = .Choose_Hand
 			}
+
 		case .Flip:
 		}
 
