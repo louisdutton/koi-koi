@@ -5,7 +5,7 @@ import "core:math/rand"
 import "core:strings"
 import r "vendor:raylib"
 
-CARD_SIZE :: r.Vector2{60, 80}
+CARD_SIZE :: Vec2{60, 80}
 CARD_BORDER_WIDTH :: 4
 
 SELECTED_VERTICAL_OFFSET :: 10
@@ -20,23 +20,19 @@ draw_player_hand :: proc() {
 	for card, i in hand {
 		if i != selection {
 			draw_card(
-				r.Vector2 {
-					f32(PADDING + (HAND_SPACING * i)),
-					SCREEN_HEIGHT - PADDING - CARD_SIZE.y,
-				},
+				Vec2{f32(PADDING + (HAND_SPACING * i)), SCREEN_HEIGHT - PADDING - CARD_SIZE.y},
 				card,
 			)
 		}
 	}
-
 }
 
 draw_selected_card :: proc() {
-	pos: r.Vector2
+	pos: Vec2
 	if (is_dragging) {
 		pos = r.GetMousePosition() - CARD_SIZE / 2
 	} else {
-		pos = r.Vector2 {
+		pos = {
 			f32(PADDING + (HAND_SPACING * selection)),
 			SCREEN_HEIGHT - PADDING - CARD_SIZE.y - SELECTED_VERTICAL_OFFSET,
 		}
@@ -48,21 +44,34 @@ draw_selected_card :: proc() {
 
 draw_opponent_hand :: proc() {
 	for card, i in opponent {
-		pos := r.Vector2{f32(PADDING + (HAND_SPACING + PADDING) * i), PADDING}
-		r.DrawRectangleV(pos, CARD_SIZE, r.BLACK)
+		r.DrawRectangleV(
+			Vec2{f32(PADDING + (HAND_SPACING + PADDING) * i), PADDING},
+			CARD_SIZE,
+			r.BLACK,
+		)
 	}
 }
 
 draw_table :: proc() {
 	for card, i in table {
 		draw_card(
-			r.Vector2{f32(PADDING + (TABLE_SPACING) * i), SCREEN_HEIGHT / 2 - CARD_SIZE.y / 2},
+			Vec2{f32(PADDING + (TABLE_SPACING) * i), SCREEN_HEIGHT / 2 - CARD_SIZE.y / 2},
 			card,
 		)
 	}
 }
 
-draw_card :: proc(pos: r.Vector2, card: Card) {
+draw_deck :: proc() {
+	if (len(deck) > 0) {
+		r.DrawRectangleV(
+			Vec2{SCREEN_WIDTH * 0.75, SCREEN_HEIGHT / 2 - CARD_SIZE.y / 2},
+			CARD_SIZE,
+			r.BLACK,
+		)
+	}
+}
+
+draw_card :: proc(pos: Vec2, card: Card) {
 	r.DrawRectangleV(pos, CARD_SIZE, r.BLACK)
 	r.DrawRectangleV(pos + CARD_BORDER_WIDTH, CARD_SIZE - CARD_BORDER_WIDTH * 2, r.WHITE)
 
@@ -80,8 +89,8 @@ draw_card :: proc(pos: r.Vector2, card: Card) {
 	)
 }
 
-draw_card_outline :: proc(pos: r.Vector2) {
-	rect := r.Rectangle {
+draw_card_outline :: proc(pos: Vec2) {
+	rect := Rect {
 		pos.x - OUTLINE_OFFSET / 2,
 		pos.y - OUTLINE_OFFSET / 2,
 		CARD_SIZE.x + OUTLINE_OFFSET,
