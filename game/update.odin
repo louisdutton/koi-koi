@@ -93,5 +93,5 @@ get_matches :: proc() -> [dynamic]int {
 }
 
 matches_selected :: proc(card: Card) -> bool {
-	return card / 12 == hand[selection_hand] / 12
+	return card / MONTH_SIZE == hand[selection_hand] / MONTH_SIZE
 }

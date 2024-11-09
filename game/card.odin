@@ -87,7 +87,7 @@ draw_card :: proc(pos: Vec2, card: Card, border := r.BLACK, alpha: f32 = 1.0) {
 	)
 
 	// card number
-	text := strings.clone_to_cstring(fmt.tprintf("%v", card / 12))
+	text := strings.clone_to_cstring(fmt.tprintf("%v", card / MONTH_SIZE + 1))
 	font_size: i32 = 20
 	text_width: i32 = r.MeasureText(text, font_size)
 
