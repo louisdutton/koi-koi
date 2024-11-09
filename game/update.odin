@@ -32,6 +32,7 @@ update :: proc() {
 					if selection == len(hand) - 1 {
 						selection -= 1
 					}
+					break
 				}
 			}
 		}
