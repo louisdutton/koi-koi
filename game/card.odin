@@ -5,7 +5,7 @@ import "core:math/rand"
 import "core:strings"
 import r "vendor:raylib"
 
-CARD_SIZE :: Vec2{60, 80}
+CARD_SIZE :: Vec2{60, 90}
 CARD_BORDER_WIDTH :: 4
 
 SELECTED_VERTICAL_OFFSET :: 10
