@@ -1,5 +1,6 @@
 package main
 
+import "core:math/rand"
 import r "vendor:raylib"
 
 // card counts
@@ -20,6 +21,7 @@ init :: proc() {
 	// generate deck
 	deck = make([dynamic]Card, DECK_SIZE, DECK_SIZE)
 	for i in 0 ..< DECK_SIZE {deck[i] = u8(i)}
+	rand.shuffle(deck[:])
 
 	// deal table
 	table = make([dynamic]Card, 0, TABLE_MAX)
