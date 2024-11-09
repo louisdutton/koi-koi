@@ -29,6 +29,9 @@ draw_player_hand :: proc() {
 		}
 	}
 
+}
+
+draw_selected_card :: proc() {
 	pos: r.Vector2
 	if (is_dragging) {
 		pos = r.GetMousePosition() - CARD_SIZE / 2

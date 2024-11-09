@@ -26,6 +26,7 @@ draw_play :: proc() {
 	draw_player_hand()
 	draw_table()
 	draw_opponent_hand()
+	draw_selected_card() // ontop of everyting else
 }
 
 draw_pause :: proc() {
