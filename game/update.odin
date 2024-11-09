@@ -11,14 +11,18 @@ LEFT :: r.KeyboardKey.H
 RIGHT :: r.KeyboardKey.L
 
 // state
-selection := 0
+selection_hand := 0
+selection_match := 0
 is_dragging := false
+matches := [dynamic]int{} // array of table indices
 
 Play_State :: enum u8 {
-	Choose,
-	Match,
+	Choose_Hand,
+	Choose_Table,
 	Flip,
 }
+
+play_state := Play_State.Choose_Hand
 
 update :: proc() {
 	switch state {
@@ -27,30 +31,58 @@ update :: proc() {
 
 	case .Play:
 		if r.IsKeyPressed(.P) {state = .Pause}
-		if r.IsKeyPressed(LEFT) {selection = max(selection - 1, 0)}
-		if r.IsKeyPressed(RIGHT) {selection = min(selection + 1, len(hand) - 1)}
 
-		if r.IsKeyPressed(.ENTER) {
-			for card, i in table {
-				if matches_selected(card) {
-					defer ordered_remove(&table, i)
-					defer unordered_remove(&hand, selection)
-					if selection == len(hand) - 1 {
-						selection -= 1
-					}
-					break
+		switch play_state {
+		case .Choose_Hand:
+			if r.IsMouseButtonPressed(.LEFT) {is_dragging = true}
+			if r.IsMouseButtonReleased(.LEFT) {is_dragging = false}
+			if r.IsKeyPressed(LEFT) {selection_hand = max(selection_hand - 1, 0)}
+			if r.IsKeyPressed(RIGHT) {selection_hand = min(selection_hand + 1, len(hand) - 1)}
+			if r.IsKeyPressed(.ENTER) {
+				matches = get_matches()
+				switch len(matches) {
+				case 1:
+					match(matches[0])
+				case 2 ..= 3:
+					play_state = .Choose_Table
 				}
 			}
+		case .Choose_Table:
+			if r.IsKeyPressed(LEFT) {selection_match = max(selection_match - 1, 0)}
+			if r.IsKeyPressed(RIGHT) {
+				selection_match = min(selection_match + 1, len(matches) - 1)
+			}
+			if r.IsKeyPressed(.ENTER) {
+				match(matches[selection_match])
+				play_state = .Choose_Hand
+			}
+		case .Flip:
 		}
 
-		if r.IsMouseButtonPressed(.LEFT) {is_dragging = true}
-		if r.IsMouseButtonReleased(.LEFT) {is_dragging = false}
 
 	case .GameOver:
 		if r.IsKeyPressed(.ENTER) {state = .Play}
 	}
 }
 
+match :: proc(target_index: int) {
+	defer ordered_remove(&table, target_index)
+	defer unordered_remove(&hand, selection_hand)
+	if selection_hand == len(hand) - 1 {
+		selection_hand -= 1
+	}
+}
+
+get_matches :: proc() -> [dynamic]int {
+	matches := [dynamic]int{}
+	for card, i in table {
+		if matches_selected(card) {
+			append(&matches, i)
+		}
+	}
+	return matches
+}
+
 matches_selected :: proc(card: Card) -> bool {
-	return card / 12 == hand[selection] / 12
+	return card / 12 == hand[selection_hand] / 12
 }

@@ -18,7 +18,7 @@ OUTLINE_THICKNESS :: 4
 
 draw_player_hand :: proc() {
 	for card, i in hand {
-		if i != selection {
+		if i != selection_hand {
 			draw_card(
 				Vec2{f32(PADDING + (HAND_SPACING * i)), SCREEN_HEIGHT - PADDING - CARD_SIZE.y},
 				card,
@@ -33,12 +33,12 @@ draw_selected_card :: proc() {
 		pos = r.GetMousePosition() - CARD_SIZE / 2
 	} else {
 		pos = {
-			f32(PADDING + (HAND_SPACING * selection)),
+			f32(PADDING + (HAND_SPACING * selection_hand)),
 			SCREEN_HEIGHT - PADDING - CARD_SIZE.y - SELECTED_VERTICAL_OFFSET,
 		}
 	}
 
-	draw_card(pos, hand[selection])
+	draw_card(pos, hand[selection_hand])
 	draw_card_outline(pos)
 }
 
@@ -54,11 +54,12 @@ draw_opponent_hand :: proc() {
 
 draw_table :: proc() {
 	for card, i in table {
-		border_colour := matches_selected(card) ? OUTLINE_COLOUR : r.BLACK
+		is_highlighted :=
+			play_state == .Choose_Table ? matches[selection_match] == i : matches_selected(card)
 		draw_card(
 			Vec2{f32(PADDING + (TABLE_SPACING) * i), SCREEN_HEIGHT / 2 - CARD_SIZE.y / 2},
 			card,
-			border_colour,
+			is_highlighted ? OUTLINE_COLOUR : r.BLACK,
 		)
 	}
 }
