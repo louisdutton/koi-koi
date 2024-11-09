@@ -14,6 +14,12 @@ RIGHT :: r.KeyboardKey.L
 selection := 0
 is_dragging := false
 
+Play_State :: enum u8 {
+	Choose,
+	Match,
+	Flip,
+}
+
 update :: proc() {
 	switch state {
 	case .Pause:
