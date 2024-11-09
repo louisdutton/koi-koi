@@ -2,6 +2,7 @@ package main
 
 import "core:fmt"
 import "core:math/rand"
+import "core:slice"
 import "core:strings"
 import r "vendor:raylib"
 
@@ -54,12 +55,15 @@ draw_opponent_hand :: proc() {
 
 draw_table :: proc() {
 	for card, i in table {
+		alpha: f32 = 1.0
+		if play_state == .Choose_Table && !slice.contains(matches[:], i) {alpha = 0.5}
 		is_highlighted :=
 			play_state == .Choose_Table ? matches[selection_match] == i : matches_selected(card)
 		draw_card(
 			Vec2{f32(PADDING + (TABLE_SPACING) * i), SCREEN_HEIGHT / 2 - CARD_SIZE.y / 2},
 			card,
 			is_highlighted ? OUTLINE_COLOUR : r.BLACK,
+			alpha,
 		)
 	}
 }
@@ -74,9 +78,13 @@ draw_deck :: proc() {
 	}
 }
 
-draw_card :: proc(pos: Vec2, card: Card, border := r.BLACK) {
-	r.DrawRectangleV(pos, CARD_SIZE, border)
-	r.DrawRectangleV(pos + CARD_BORDER_WIDTH, CARD_SIZE - CARD_BORDER_WIDTH * 2, r.WHITE)
+draw_card :: proc(pos: Vec2, card: Card, border := r.BLACK, alpha: f32 = 1.0) {
+	r.DrawRectangleV(pos, CARD_SIZE, r.Fade(border, alpha))
+	r.DrawRectangleV(
+		pos + CARD_BORDER_WIDTH,
+		CARD_SIZE - CARD_BORDER_WIDTH * 2,
+		r.Fade(r.WHITE, alpha),
+	)
 
 	// card number
 	text := strings.clone_to_cstring(fmt.tprintf("%v", card / 12))
@@ -88,7 +96,7 @@ draw_card :: proc(pos: Vec2, card: Card, border := r.BLACK) {
 		i32(pos.x + CARD_SIZE.x / 2) - text_width / 2,
 		i32(pos.y + CARD_SIZE.y / 2) - font_size / 2,
 		font_size,
-		r.BLACK,
+		r.Fade(r.BLACK, alpha),
 	)
 }
 
