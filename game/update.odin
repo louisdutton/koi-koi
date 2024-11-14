@@ -1,6 +1,7 @@
 package main
 
 import "core:fmt"
+import "core:math"
 import r "vendor:raylib"
 
 // keymaps
@@ -58,8 +59,7 @@ update :: proc() {
 					play_state = .Choose_Table
 				case:
 					// add card from hand to table
-					append(&table, player.hand[selection_hand])
-					unordered_remove(&player.hand, selection_hand)
+					play()
 					start_flip()
 				}
 			}
@@ -118,12 +118,25 @@ flip_match :: proc(target_index: int) {
 	// TODO add matched card to player collection
 }
 
+// play a card from your hand to the table
+play :: proc() {
+	append(&table, player.hand[selection_hand])
+	ordered_remove(&player.hand, selection_hand)
+	clamp_selection_index()
+}
+
+// play a card in your hand with a card on the table,
+// adding both of them to your collection
 match :: proc(target_index: int) {
-	defer ordered_remove(&table, target_index)
-	defer unordered_remove(&player.hand, selection_hand)
-	if selection_hand == len(player.hand) - 1 {
-		selection_hand -= 1
-	}
+	// add to collection
+	append(&player.collection, table[target_index])
+	append(&player.collection, player.hand[selection_hand])
+
+	// remove from source
+	ordered_remove(&table, target_index)
+	ordered_remove(&player.hand, selection_hand)
+
+	clamp_selection_index()
 }
 
 get_matches :: proc(target: Card) -> [dynamic]TableIndex {
@@ -138,4 +151,12 @@ get_matches :: proc(target: Card) -> [dynamic]TableIndex {
 
 is_match :: proc(a: Card, b: Card) -> bool {
 	return a / MONTH_SIZE == b / MONTH_SIZE
+}
+
+// prevent out-of-range errors
+@(private)
+clamp_selection_index :: proc() {
+	if selection_hand == len(player.hand) && selection_hand != 0 {
+		selection_hand -= 1
+	}
 }
