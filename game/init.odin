@@ -1,6 +1,8 @@
 package main
 
+import "core:fmt"
 import "core:math/rand"
+import "core:os"
 import r "vendor:raylib"
 
 // card counts
@@ -39,6 +41,27 @@ init :: proc() {
 		collection = make([dynamic]Card, 0, DECK_SIZE),
 	}
 	for i in 0 ..< HAND_SIZE {append(&player.hand, pop(&deck))}
+
+	// check for instant win
+	groups := map[u8]int{}
+	for card in player.hand {
+		key := card / MONTH_COUNT
+		groups[key] += 1
+	}
+
+	// 4 pairs
+	//if len(groups) == 4 {
+	//	fmt.println("You win!")
+	//	os.exit(0)
+	//}
+
+	// four of same month 
+	for v in groups {
+		if v == 4 {
+			fmt.println("You win!")
+			os.exit(0)
+		}
+	}
 
 	// deal opponent
 	opponent = Player {
