@@ -41,7 +41,7 @@ draw_table :: proc() {
 		is_highlighted := false
 
 		#partial switch play_state {
-		case .Choose_Table:
+		case .Choose_Table, .Flip:
 			if !slice.contains(matches[:], i) {alpha = 0.5}
 			is_highlighted = matches[selection_match] == i
 		case .Choose_Hand:
