@@ -59,9 +59,16 @@ draw_opponent_hand :: proc() {
 draw_table :: proc() {
 	for card, i in table {
 		alpha: f32 = 1.0
-		if play_state == .Choose_Table && !slice.contains(matches[:], i) {alpha = 0.5}
-		is_highlighted :=
-			play_state == .Choose_Table ? matches[selection_match] == i : is_match(card, hand[selection_hand])
+		is_highlighted := false
+
+		#partial switch play_state {
+		case .Choose_Table:
+			if !slice.contains(matches[:], i) {alpha = 0.5}
+			is_highlighted = matches[selection_match] == i
+		case .Choose_Hand:
+			is_highlighted = is_match(card, hand[selection_hand])
+		}
+
 		draw_card(
 			Vec2{f32(PADDING + (TABLE_SPACING) * i), SCREEN_HEIGHT / 2 - CARD_SIZE.y / 2},
 			card,
