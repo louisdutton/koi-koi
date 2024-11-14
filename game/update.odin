@@ -15,11 +15,16 @@ selection_hand := 0
 selection_match := 0
 is_dragging := false
 matches := [dynamic]int{} // array of table indices
+flip_card: Card
+
+TableIndex :: int
 
 Play_State :: enum u8 {
 	Choose_Hand,
 	Choose_Table,
 	Flip,
+	Opponent_Hand,
+	Opponent_Table,
 }
 
 play_state := Play_State.Choose_Hand
@@ -44,13 +49,19 @@ update :: proc() {
 			case r.IsKeyPressed(RIGHT):
 				selection_hand = min(selection_hand + 1, len(hand) - 1)
 			case r.IsKeyPressed(.ENTER):
-				matches = get_matches()
+				matches = get_matches(hand[selection_hand])
 				count := len(matches)
 				switch {
 				case count == 1:
 					match(matches[0])
+					start_flip()
 				case count >= 2:
 					play_state = .Choose_Table
+				case:
+					// add card from hand to table
+					append(&table, hand[selection_hand])
+					unordered_remove(&hand, selection_hand)
+					play_state = .Flip
 				}
 			}
 
@@ -62,16 +73,50 @@ update :: proc() {
 				selection_match = min(selection_match + 1, len(matches) - 1)
 			case r.IsKeyPressed(.ENTER):
 				match(matches[selection_match])
-				play_state = .Choose_Hand
+				start_flip()
 			}
 
 		case .Flip:
+			switch {
+			case r.IsKeyPressed(LEFT):
+				selection_match = max(selection_match - 1, 0)
+			case r.IsKeyPressed(RIGHT):
+				selection_match = min(selection_match + 1, len(matches) - 1)
+			case r.IsKeyPressed(.ENTER):
+				flip(selection_match)
+				play_state = .Opponent_Hand
+			}
+		case .Opponent_Hand:
+			ai_play()
+		case .Opponent_Table:
 		}
-
 
 	case .GameOver:
 		if r.IsKeyPressed(.ENTER) {state = .Play}
 	}
+}
+
+start_flip :: proc() {
+	flip_card = pop(&deck)
+	matches = get_matches(flip_card)
+	switch len(matches) {
+	case 0:
+		// can't match so add it to the table and end turn
+		append(&table, flip_card)
+		play_state = .Opponent_Hand
+	case 1:
+		// only one match so immediately apply match 
+		flip(matches[0])
+		play_state = .Opponent_Hand
+	case:
+		// choose from multiple potential matches
+		play_state = .Flip
+	}
+}
+
+flip :: proc(target_index: int) {
+	ordered_remove(&table, target_index)
+	// TODO add matched card to player collection
 }
 
 match :: proc(target_index: int) {
@@ -82,16 +127,16 @@ match :: proc(target_index: int) {
 	}
 }
 
-get_matches :: proc() -> [dynamic]int {
+get_matches :: proc(target: Card) -> [dynamic]TableIndex {
 	matches := [dynamic]int{}
 	for card, i in table {
-		if matches_selected(card) {
+		if is_match(card, target) {
 			append(&matches, i)
 		}
 	}
 	return matches
 }
 
-matches_selected :: proc(card: Card) -> bool {
-	return card / MONTH_SIZE == hand[selection_hand] / MONTH_SIZE
+is_match :: proc(a: Card, b: Card) -> bool {
+	return a / MONTH_SIZE == b / MONTH_SIZE
 }

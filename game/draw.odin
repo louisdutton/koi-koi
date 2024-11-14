@@ -1,10 +1,13 @@
 package main
 
+import "core:fmt"
+import "core:strings"
 import r "vendor:raylib"
 
 PADDING :: 10
 FONT_SIZE :: 40
 TEXT_COLOUR :: r.WHITE
+FONT_CENTER_VERTICAL :: SCREEN_HEIGHT / 2 - FONT_SIZE / 2
 
 draw :: proc() {
 	r.BeginDrawing()
@@ -28,6 +31,27 @@ draw_play :: proc() {
 	draw_opponent_hand()
 	draw_deck()
 	draw_selected_card() // ontop of everyting else
+
+	// canvas layer
+	draw_ui()
+}
+
+draw_ui :: proc() {
+	text: cstring
+	switch play_state {
+	case .Choose_Hand:
+		text = "Player Hand"
+	case .Choose_Table:
+		text = "Player Table"
+	case .Flip:
+		text = "Flip"
+	case .Opponent_Hand:
+		text = "Opponent Hand"
+	case .Opponent_Table:
+		text = "Opponent Table"
+	}
+
+	draw_centered_text(text, 40)
 }
 
 draw_pause :: proc() {
@@ -40,13 +64,7 @@ fill_screen :: proc(color: r.Color) {
 	r.DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, color)
 }
 
-draw_centered_text :: proc(text: cstring) {
+draw_centered_text :: proc(text: cstring, y: i32 = FONT_CENTER_VERTICAL) {
 	w := r.MeasureText(text, FONT_SIZE)
-	r.DrawText(
-		text,
-		SCREEN_WIDTH / 2 - w / 2,
-		SCREEN_HEIGHT / 2 - FONT_SIZE / 2,
-		FONT_SIZE,
-		TEXT_COLOUR,
-	)
+	r.DrawText(text, SCREEN_WIDTH / 2 - w / 2, y, FONT_SIZE, TEXT_COLOUR)
 }

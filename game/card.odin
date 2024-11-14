@@ -61,7 +61,7 @@ draw_table :: proc() {
 		alpha: f32 = 1.0
 		if play_state == .Choose_Table && !slice.contains(matches[:], i) {alpha = 0.5}
 		is_highlighted :=
-			play_state == .Choose_Table ? matches[selection_match] == i : matches_selected(card)
+			play_state == .Choose_Table ? matches[selection_match] == i : is_match(card, hand[selection_hand])
 		draw_card(
 			Vec2{f32(PADDING + (TABLE_SPACING) * i), SCREEN_HEIGHT / 2 - CARD_SIZE.y / 2},
 			card,
@@ -91,6 +91,7 @@ draw_card :: proc(pos: Vec2, card: Card, border := r.BLACK, alpha: f32 = 1.0) {
 
 	// card number
 	text := strings.clone_to_cstring(fmt.tprintf("%v", card / MONTH_SIZE + 1))
+	defer delete(text)
 	font_size: i32 = 20
 	text_width: i32 = r.MeasureText(text, font_size)
 
