@@ -12,10 +12,16 @@ DECK_SIZE :: MONTH_SIZE * MONTH_COUNT
 
 Card :: u8
 
+Player :: struct {
+	hand:       [dynamic]Card,
+	collection: [dynamic]Card,
+}
+
 deck: [dynamic]Card
-hand: [dynamic]Card
 table: [dynamic]Card
-opponent: [dynamic]Card
+
+player: Player
+opponent: Player
 
 init :: proc() {
 	// generate deck
@@ -28,10 +34,16 @@ init :: proc() {
 	for i in 0 ..< HAND_SIZE {append(&table, pop(&deck))}
 
 	// deal player
-	hand = make([dynamic]Card, 0, DECK_SIZE)
-	for i in 0 ..< HAND_SIZE {append(&hand, pop(&deck))}
+	player = Player {
+		hand       = make([dynamic]Card, 0, HAND_SIZE),
+		collection = make([dynamic]Card, 0, DECK_SIZE),
+	}
+	for i in 0 ..< HAND_SIZE {append(&player.hand, pop(&deck))}
 
 	// deal opponent
-	opponent = make([dynamic]Card, 0, DECK_SIZE)
-	for i in 0 ..< HAND_SIZE {append(&opponent, pop(&deck))}
+	opponent = Player {
+		hand       = make([dynamic]Card, 0, HAND_SIZE),
+		collection = make([dynamic]Card, 0, DECK_SIZE),
+	}
+	for i in 0 ..< HAND_SIZE {append(&opponent.hand, pop(&deck))}
 }

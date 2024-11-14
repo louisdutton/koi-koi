@@ -46,9 +46,9 @@ update :: proc() {
 			case r.IsKeyPressed(LEFT):
 				selection_hand = max(selection_hand - 1, 0)
 			case r.IsKeyPressed(RIGHT):
-				selection_hand = min(selection_hand + 1, len(hand) - 1)
+				selection_hand = min(selection_hand + 1, len(player.hand) - 1)
 			case r.IsKeyPressed(.ENTER):
-				matches = get_matches(hand[selection_hand])
+				matches = get_matches(player.hand[selection_hand])
 				count := len(matches)
 				switch {
 				case count == 1:
@@ -58,8 +58,8 @@ update :: proc() {
 					play_state = .Choose_Table
 				case:
 					// add card from hand to table
-					append(&table, hand[selection_hand])
-					unordered_remove(&hand, selection_hand)
+					append(&table, player.hand[selection_hand])
+					unordered_remove(&player.hand, selection_hand)
 					start_flip()
 				}
 			}
@@ -82,7 +82,7 @@ update :: proc() {
 			case r.IsKeyPressed(RIGHT):
 				selection_match = min(selection_match + 1, len(matches) - 1)
 			case r.IsKeyPressed(.ENTER):
-				flip(selection_match)
+				flip_match(selection_match)
 				play_state = .Opponent_Hand
 			}
 		case .Opponent_Hand:
@@ -105,7 +105,7 @@ start_flip :: proc() {
 		play_state = .Opponent_Hand
 	case 1:
 		// only one match so immediately apply match 
-		flip(matches[0])
+		flip_match(matches[0])
 		play_state = .Opponent_Hand
 	case:
 		// choose from multiple potential matches
@@ -113,15 +113,15 @@ start_flip :: proc() {
 	}
 }
 
-flip :: proc(target_index: int) {
+flip_match :: proc(target_index: int) {
 	ordered_remove(&table, target_index)
 	// TODO add matched card to player collection
 }
 
 match :: proc(target_index: int) {
 	defer ordered_remove(&table, target_index)
-	defer unordered_remove(&hand, selection_hand)
-	if selection_hand == len(hand) - 1 {
+	defer unordered_remove(&player.hand, selection_hand)
+	if selection_hand == len(player.hand) - 1 {
 		selection_hand -= 1
 	}
 }

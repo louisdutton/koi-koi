@@ -26,11 +26,10 @@ draw :: proc() {
 }
 
 draw_play :: proc() {
-	draw_player_hand()
+	draw_visible_hand(player.hand)
+	draw_hidden_hand(opponent.hand)
 	draw_table()
-	draw_opponent_hand()
 	draw_deck()
-	draw_selected_card() // ontop of everyting else
 
 	// canvas layer
 	draw_ui()

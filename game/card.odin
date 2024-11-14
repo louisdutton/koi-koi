@@ -19,40 +19,19 @@ OUTLINE_THICKNESS :: 4
 // debug flags
 SHOW_OPPONENTS_HAND :: false
 
-draw_player_hand :: proc() {
+draw_visible_hand :: proc(hand: [dynamic]Card) {
 	for card, i in hand {
-		if i != selection_hand {
-			draw_card(
-				Vec2{f32(PADDING + (TABLE_SPACING * i)), SCREEN_HEIGHT - PADDING - CARD_SIZE.y},
-				card,
-			)
+		pos := Vec2{f32(PADDING + (TABLE_SPACING * i)), SCREEN_HEIGHT - PADDING - CARD_SIZE.y}
+		draw_card(pos, card)
+		if i == selection_hand {
+			draw_card_outline(pos)
 		}
 	}
 }
 
-draw_selected_card :: proc() {
-	pos: Vec2
-	if (is_dragging) {
-		pos = r.GetMousePosition() - CARD_SIZE / 2
-	} else {
-		pos = {
-			f32(PADDING + (TABLE_SPACING * selection_hand)),
-			SCREEN_HEIGHT - PADDING - CARD_SIZE.y - SELECTED_VERTICAL_OFFSET,
-		}
-	}
-
-	draw_card(pos, hand[selection_hand])
-	draw_card_outline(pos)
-}
-
-draw_opponent_hand :: proc() {
-	for card, i in opponent {
-		when SHOW_OPPONENTS_HAND {
-			draw_card(Vec2{f32(PADDING + (TABLE_SPACING) * i), PADDING}, card)
-		} else {
-			r.DrawRectangleV(Vec2{f32(PADDING + (TABLE_SPACING) * i), PADDING}, CARD_SIZE, r.BLACK)
-
-		}
+draw_hidden_hand :: proc(hand: [dynamic]Card) {
+	for card, i in hand {
+		r.DrawRectangleV(Vec2{f32(PADDING + (TABLE_SPACING) * i), PADDING}, CARD_SIZE, r.BLACK)
 	}
 }
 
@@ -66,7 +45,7 @@ draw_table :: proc() {
 			if !slice.contains(matches[:], i) {alpha = 0.5}
 			is_highlighted = matches[selection_match] == i
 		case .Choose_Hand:
-			is_highlighted = is_match(card, hand[selection_hand])
+			is_highlighted = is_match(card, player.hand[selection_hand])
 		}
 
 		draw_card(

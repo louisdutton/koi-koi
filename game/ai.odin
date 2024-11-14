@@ -6,7 +6,7 @@ ai_play :: proc() {
 	// check if any matches are possible
 	options := make([dynamic][dynamic]TableIndex)
 	defer delete(options)
-	for card in opponent {
+	for card in opponent.hand {
 		matches := get_matches(card)
 		if len(matches) > 0 {
 			append(&options, matches)
@@ -22,14 +22,14 @@ ai_play :: proc() {
 
 		// perform match
 		defer ordered_remove(&table, table_index)
-		defer unordered_remove(&opponent, hand_index)
+		defer unordered_remove(&opponent.hand, hand_index)
 
 		// end turn
 		play_state = .Choose_Hand
 	} else {
 		// no matches available so add a random card to the table
-		to_remove := rand.int_max(len(opponent))
-		append(&table, opponent[to_remove])
-		unordered_remove(&opponent, to_remove)
+		to_remove := rand.int_max(len(opponent.hand))
+		append(&table, opponent.hand[to_remove])
+		unordered_remove(&opponent.hand, to_remove)
 	}
 }
