@@ -1,7 +1,6 @@
 package main
 
 import "core:fmt"
-import "core:time"
 import r "vendor:raylib"
 
 // keymaps
@@ -61,7 +60,7 @@ update :: proc() {
 					// add card from hand to table
 					append(&table, hand[selection_hand])
 					unordered_remove(&hand, selection_hand)
-					play_state = .Flip
+					start_flip()
 				}
 			}
 
