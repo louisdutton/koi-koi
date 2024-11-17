@@ -1,5 +1,5 @@
 # artifacts
-*.bin
+*.bin*
 result
 build
 .direnv
