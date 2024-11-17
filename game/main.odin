@@ -30,4 +30,6 @@ main :: proc() {
 		update()
 		draw()
 	}
+
+	shutdown()
 }
