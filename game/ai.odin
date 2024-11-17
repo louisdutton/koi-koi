@@ -2,12 +2,12 @@ package main
 
 import "core:math/rand"
 
-ai_play :: proc() {
-	card_count := len(state.opponent.hand)
+// returns the index of the chosen card to be played
+ai_play :: proc(hand: [dynamic]Card) -> (hand_index: int, table_index: Maybe(int)) {
+	card_count := len(hand)
 
 	if (card_count == 0) {
-		ai_end_turn()
-		return
+		panic("hand should never be empty")
 	}
 
 	// check if any matches are possible
@@ -16,28 +16,16 @@ ai_play :: proc() {
 
 	option_count := len(options)
 	if option_count > 0 {
-		// pick a random card from the hand
-		hand_index := rand.int_max(option_count)
-		// and a random card from the table
 		table_option_count := len(options[hand_index])
-		table_index := rand.int_max(table_option_count)
-
-		// perform match
-		ordered_remove(&state.table, table_index)
-		unordered_remove(&state.opponent.hand, hand_index)
-
-		ai_end_turn()
+		// pick a random card from the hand
+		hand_index = rand.int_max(option_count)
+		// and a random card from the table
+		table_index = rand.int_max(table_option_count)
+		return hand_index, table_index
 	} else {
 		// no matches available so add a random card to the table
-		to_remove := rand.int_max(card_count)
-		append(&state.table, state.opponent.hand[to_remove])
-		unordered_remove(&state.opponent.hand, to_remove)
+		return rand.int_max(card_count), nil
 	}
-}
-
-// end turn
-ai_end_turn :: proc() {
-	state.phase = .PlayerHand
 }
 
 ai_calc_options :: proc() -> [dynamic][dynamic]int {
