@@ -42,25 +42,9 @@ init :: proc() {
 	}
 	for i in 0 ..< HAND_SIZE {append(&player.hand, pop(&deck))}
 
-	// check for instant win
-	groups := map[u8]int{}
-	for card in player.hand {
-		key := card / MONTH_COUNT
-		groups[key] += 1
-	}
-
-	// 4 pairs
-	//if len(groups) == 4 {
-	//	fmt.println("You win!")
-	//	os.exit(0)
-	//}
-
-	// four of same month 
-	for v in groups {
-		if v == 4 {
-			fmt.println("You win!")
-			os.exit(0)
-		}
+	if is_instant_win(&player.hand) {
+		fmt.println("You win!")
+		os.exit(0)
 	}
 
 	// deal opponent
@@ -69,4 +53,16 @@ init :: proc() {
 		collection = make([dynamic]Card, 0, DECK_SIZE),
 	}
 	for i in 0 ..< HAND_SIZE {append(&opponent.hand, pop(&deck))}
+}
+
+shutdown :: proc() {
+	delete(deck)
+	delete(table)
+
+	delete(player.collection)
+	delete(player.hand)
+
+	delete(opponent.hand)
+	delete(opponent.collection)
+
 }
