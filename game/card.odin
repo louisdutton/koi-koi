@@ -1,6 +1,5 @@
 package main
 
-Card :: u8
 
 Month :: enum u8 {
 	January,

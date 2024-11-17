@@ -4,59 +4,30 @@ import "core:fmt"
 import "core:math"
 import r "vendor:raylib"
 
-// keymaps
-UP :: r.KeyboardKey.K
-DOWN :: r.KeyboardKey.J
-LEFT :: r.KeyboardKey.H
-RIGHT :: r.KeyboardKey.L
-
-// state
-selection_hand := 0
-selection_match := 0
-is_dragging := false
-matches := [dynamic]int{} // array of table indices
-flip_card: Card
-
-TableIndex :: int
-
-Play_State :: enum u8 {
-	Choose_Hand,
-	Choose_Table,
-	Flip,
-	Opponent_Hand,
-	Opponent_Table,
-}
-
-play_state := Play_State.Choose_Hand
-
 update :: proc() {
-	switch state {
+	switch state.scene {
 	case .Pause:
-		if r.IsKeyPressed(.P) {state = .Play}
+		if r.IsKeyPressed(.P) {state.scene = .Play}
 
 	case .Play:
-		if r.IsKeyPressed(.P) {state = .Pause}
+		if r.IsKeyPressed(.P) {state.scene = .Pause}
 
-		switch play_state {
-		case .Choose_Hand:
+		switch state.phase {
+		case .PlayerHand:
 			switch {
-			case r.IsMouseButtonPressed(.LEFT):
-				is_dragging = true
-			case r.IsMouseButtonReleased(.LEFT):
-				is_dragging = false
 			case r.IsKeyPressed(LEFT):
-				selection_hand = max(selection_hand - 1, 0)
+				state.hand_index = max(state.hand_index - 1, 0)
 			case r.IsKeyPressed(RIGHT):
-				selection_hand = min(selection_hand + 1, len(player.hand) - 1)
+				state.hand_index = min(state.hand_index + 1, len(state.player.hand) - 1)
 			case r.IsKeyPressed(.ENTER):
-				matches = get_matches(player.hand[selection_hand])
-				count := len(matches)
+				get_matches(state.player.hand[state.hand_index])
+				count := len(state.matches)
 				switch {
 				case count == 1:
-					match(matches[0])
+					match(state.player.hand[state.hand_index], state.matches[0])
 					start_flip()
 				case count >= 2:
-					play_state = .Choose_Table
+					state.phase = .PlayerTable
 				case:
 					// add card from hand to table
 					play()
@@ -64,89 +35,87 @@ update :: proc() {
 				}
 			}
 
-		case .Choose_Table:
+		case .PlayerTable:
 			switch {
 			case r.IsKeyPressed(LEFT):
-				selection_match = max(selection_match - 1, 0)
+				state.table_index = max(state.table_index - 1, 0)
 			case r.IsKeyPressed(RIGHT):
-				selection_match = min(selection_match + 1, len(matches) - 1)
+				state.table_index = min(state.table_index + 1, len(state.matches) - 1)
 			case r.IsKeyPressed(.ENTER):
-				match(matches[selection_match])
+				match(state.player.hand[state.hand_index], state.matches[state.table_index])
 				start_flip()
 			}
 
 		case .Flip:
 			switch {
 			case r.IsKeyPressed(LEFT):
-				selection_match = max(selection_match - 1, 0)
+				state.table_index = max(state.table_index - 1, 0)
 			case r.IsKeyPressed(RIGHT):
-				selection_match = min(selection_match + 1, len(matches) - 1)
+				state.table_index = min(state.table_index + 1, len(state.matches) - 1)
 			case r.IsKeyPressed(.ENTER):
-				flip_match(selection_match)
-				play_state = .Opponent_Hand
+				flip_match(state.flip_card, state.table_index)
+				state.phase = .OpponentHand
 			}
-		case .Opponent_Hand:
+		case .OpponentHand:
 			ai_play()
-		case .Opponent_Table:
+		case .OpponentTable:
 		}
 
 	case .GameOver:
-		if r.IsKeyPressed(.ENTER) {state = .Play}
+		if r.IsKeyPressed(.ENTER) {state.scene = .Play}
 	}
 }
 
 start_flip :: proc() {
-	flip_card = pop(&deck)
-	matches = get_matches(flip_card)
-	switch len(matches) {
+	state.flip_card = pop(&state.deck)
+	get_matches(state.flip_card)
+	switch len(state.matches) {
 	case 0:
 		// can't match so add it to the table and end turn
-		append(&table, flip_card)
-		play_state = .Opponent_Hand
+		append(&state.table, state.flip_card)
+		state.phase = .OpponentHand
 	case 1:
 		// only one match so immediately apply match 
-		flip_match(matches[0])
-		play_state = .Opponent_Hand
+		flip_match(state.flip_card, state.matches[0])
+		state.phase = .OpponentHand
 	case:
 		// choose from multiple potential matches
-		play_state = .Flip
+		state.phase = .Flip
 	}
-}
-
-flip_match :: proc(target_index: int) {
-	ordered_remove(&table, target_index)
-	// TODO add matched card to player collection
 }
 
 // play a card from your hand to the table
 play :: proc() {
-	append(&table, player.hand[selection_hand])
-	ordered_remove(&player.hand, selection_hand)
+	append(&state.table, state.player.hand[state.hand_index])
+	ordered_remove(&state.player.hand, state.hand_index)
 	clamp_selection_index()
+}
+
+flip_match :: proc(card: Card, target_index: int) {
+	// add to collection (twice)
+	append(&state.player.collection, card, card)
+	ordered_remove(&state.table, target_index)
 }
 
 // play a card in your hand with a card on the table,
 // adding both of them to your collection
-match :: proc(target_index: int) {
-	// add to collection
-	append(&player.collection, table[target_index])
-	append(&player.collection, player.hand[selection_hand])
+match :: proc(card: Card, target_index: int) {
+	// add to collection (twice)
+	append(&state.player.collection, card, card)
 
 	// remove from source
-	ordered_remove(&table, target_index)
-	ordered_remove(&player.hand, selection_hand)
+	ordered_remove(&state.table, target_index)
+	ordered_remove(&state.player.hand, state.hand_index)
 
 	clamp_selection_index()
 }
 
-get_matches :: proc(target: Card) -> [dynamic]TableIndex {
-	matches := [dynamic]int{}
-	for card, i in table {
+get_matches :: proc(target: Card) {
+	for card, i in state.table {
 		if is_match(card, target) {
-			append(&matches, i)
+			append(&state.matches, i)
 		}
 	}
-	return matches
 }
 
 is_match :: proc(a: Card, b: Card) -> bool {
@@ -156,7 +125,7 @@ is_match :: proc(a: Card, b: Card) -> bool {
 // prevent out-of-range errors
 @(private)
 clamp_selection_index :: proc() {
-	if selection_hand == len(player.hand) && selection_hand != 0 {
-		selection_hand -= 1
+	if state.hand_index == len(state.player.hand) && state.hand_index != 0 {
+		state.hand_index -= 1
 	}
 }

@@ -9,13 +9,6 @@ SCREEN_HEIGHT :: 450
 
 FPS :: 60
 
-GameState :: enum u8 {
-	Play,
-	Pause,
-	GameOver,
-}
-
-state := GameState.Play
 
 main :: proc() {
 	r.SetConfigFlags({.WINDOW_RESIZABLE, .WINDOW_UNDECORATED})
@@ -27,6 +20,7 @@ main :: proc() {
 	init()
 
 	for !r.WindowShouldClose() { 	// Detect window close button or ESC key
+		r.GetTime()
 		update()
 		draw()
 	}

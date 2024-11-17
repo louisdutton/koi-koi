@@ -23,7 +23,7 @@ draw_visible_hand :: proc(hand: [dynamic]Card) {
 	for card, i in hand {
 		pos := Vec2{f32(PADDING + (TABLE_SPACING * i)), SCREEN_HEIGHT - PADDING - CARD_SIZE.y}
 		draw_card(pos, card)
-		if i == selection_hand {
+		if i == state.hand_index {
 			draw_card_outline(pos)
 		}
 	}
@@ -36,16 +36,16 @@ draw_hidden_hand :: proc(hand: [dynamic]Card) {
 }
 
 draw_table :: proc() {
-	for card, i in table {
+	for card, i in state.table {
 		alpha: f32 = 1.0
 		is_highlighted := false
 
-		#partial switch play_state {
-		case .Choose_Table, .Flip:
-			if !slice.contains(matches[:], i) {alpha = 0.5}
-			is_highlighted = matches[selection_match] == i
-		case .Choose_Hand:
-			is_highlighted = is_match(card, player.hand[selection_hand])
+		#partial switch state.phase {
+		case .PlayerTable, .Flip:
+			if !slice.contains(state.matches[:], i) {alpha = 0.5}
+			is_highlighted = state.matches[state.table_index] == i
+		case .PlayerHand:
+			is_highlighted = is_match(card, state.player.hand[state.hand_index])
 		}
 
 		draw_card(
@@ -58,7 +58,7 @@ draw_table :: proc() {
 }
 
 draw_deck :: proc() {
-	if (len(deck) > 0) {
+	if (len(state.deck) > 0) {
 		r.DrawRectangleV(
 			Vec2{SCREEN_WIDTH * 0.75, SCREEN_HEIGHT / 2 - CARD_SIZE.y / 2},
 			CARD_SIZE,

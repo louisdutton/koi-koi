@@ -15,7 +15,7 @@ draw :: proc() {
 
 	r.ClearBackground(r.GRAY)
 
-	switch state {
+	switch state.scene {
 	case .Play:
 		draw_play()
 	case .Pause:
@@ -26,8 +26,8 @@ draw :: proc() {
 }
 
 draw_play :: proc() {
-	draw_visible_hand(player.hand)
-	draw_hidden_hand(opponent.hand)
+	draw_visible_hand(state.player.hand)
+	draw_hidden_hand(state.opponent.hand)
 	draw_table()
 	draw_deck()
 
@@ -37,16 +37,16 @@ draw_play :: proc() {
 
 draw_ui :: proc() {
 	text: cstring
-	switch play_state {
-	case .Choose_Hand:
+	switch state.phase {
+	case .PlayerHand:
 		text = "Player Hand"
-	case .Choose_Table:
+	case .PlayerTable:
 		text = "Player Table"
 	case .Flip:
 		text = "Flip"
-	case .Opponent_Hand:
+	case .OpponentHand:
 		text = "Opponent Hand"
-	case .Opponent_Table:
+	case .OpponentTable:
 		text = "Opponent Table"
 	}
 
