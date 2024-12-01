@@ -37,7 +37,12 @@
         { pkgs }:
         {
           default = pkgs.mkShell {
-            packages = inputs pkgs ++ (with pkgs; [ lldb ]);
+            packages =
+              inputs pkgs
+              ++ (with pkgs; [
+                lldb
+                resvg
+              ]);
           };
         }
       );

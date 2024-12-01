@@ -58,6 +58,8 @@ GameState :: struct {
 state: GameState
 
 init :: proc() {
+	load_images()
+
 	state = GameState {
 		scene = .Play,
 		phase = .PlayerHand,
@@ -117,4 +119,6 @@ shutdown :: proc() {
 
 	delete(state.opponent.hand)
 	delete(state.opponent.collection)
+
+	unload_images()
 }
