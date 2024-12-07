@@ -72,7 +72,7 @@ deal :: proc() {
 
 @(private = "file")
 load_window :: proc() {
-	raylib.SetConfigFlags({.WINDOW_RESIZABLE})
+	raylib.SetConfigFlags({.WINDOW_RESIZABLE, .WINDOW_UNDECORATED})
 	raylib.SetTargetFPS(FPS)
 	raylib.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TITLE)
 }
