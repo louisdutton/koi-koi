@@ -7,8 +7,6 @@ MONTH_SIZE :: 4
 MONTH_COUNT :: 12
 DECK_SIZE :: MONTH_SIZE * MONTH_COUNT
 
-Card :: u8
-
 Player :: struct {
 	hand:       [dynamic]Card,
 	collection: [dynamic]Card,

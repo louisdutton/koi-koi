@@ -1,24 +1,18 @@
 package main
 
-
-Month :: enum u8 {
-	January,
-	February,
-	March,
-	April,
-	May,
-	June,
-	July,
-	August,
-	September,
-	November,
-	December,
-}
-
-card_get :: proc(month: Month, index: u8) -> Card {
-	return u8(month) * MONTH_SIZE + index
+card_from_suit :: proc(suit: Suit, index: u8) -> Card {
+	return u8(suit) * MONTH_SIZE + index
 }
 
 card_is_same_month :: proc(a: Card, b: Card) -> bool {
-	return a / MONTH_SIZE == b / MONTH_SIZE
+	return card_get_suit(a) == card_get_suit(b)
+}
+
+card_get_suit :: proc(card: Card) -> Suit {
+	return Suit(card / MONTH_SIZE)
+}
+
+card_get_kind :: proc(card: Card) -> CardKind {
+	kinds := CARD_KINDS // FIXME: shouldn't need to do this
+	return kinds[card]
 }
