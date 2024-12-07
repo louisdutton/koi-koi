@@ -2,18 +2,18 @@ package main
 
 import "core:fmt"
 import "core:strings"
-import r "vendor:raylib"
+import "vendor:raylib"
 
 PADDING :: 10
 FONT_SIZE :: 40
-TEXT_COLOUR :: r.WHITE
+TEXT_COLOUR :: raylib.WHITE
 FONT_CENTER_VERTICAL :: SCREEN_HEIGHT / 2 - FONT_SIZE / 2
 
 draw :: proc() {
-	r.BeginDrawing()
-	defer r.EndDrawing()
+	raylib.BeginDrawing()
+	defer raylib.EndDrawing()
 
-	r.ClearBackground(r.GRAY)
+	raylib.ClearBackground(raylib.GRAY)
 
 	switch state.scene {
 	case .Play:
@@ -46,8 +46,6 @@ draw_ui :: proc() {
 		text = "Flip"
 	case .OpponentHand:
 		text = "Opponent Hand"
-	case .OpponentTable:
-		text = "Opponent Table"
 	}
 
 	draw_centered_text(text, 40)
@@ -55,15 +53,15 @@ draw_ui :: proc() {
 
 draw_pause :: proc() {
 	draw_play()
-	fill_screen(r.Fade(r.BLACK, 0.75))
+	fill_screen(raylib.Fade(raylib.BLACK, 0.75))
 	draw_centered_text("Paused")
 }
 
-fill_screen :: proc(color: r.Color) {
-	r.DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, color)
+fill_screen :: proc(color: Color) {
+	raylib.DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, color)
 }
 
 draw_centered_text :: proc(text: cstring, y: i32 = FONT_CENTER_VERTICAL) {
-	w := r.MeasureText(text, FONT_SIZE)
-	r.DrawText(text, SCREEN_WIDTH / 2 - w / 2, y, FONT_SIZE, TEXT_COLOUR)
+	w := raylib.MeasureText(text, FONT_SIZE)
+	raylib.DrawText(text, SCREEN_WIDTH / 2 - w / 2, y, FONT_SIZE, TEXT_COLOUR)
 }

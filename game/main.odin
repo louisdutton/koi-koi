@@ -9,21 +9,18 @@ SCREEN_HEIGHT :: 450
 
 FPS :: 60
 
-
 main :: proc() {
-	r.SetConfigFlags({.WINDOW_RESIZABLE, .WINDOW_UNDECORATED})
-	r.SetTargetFPS(FPS)
+	load()
+	defer unload()
 
-	r.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TITLE)
-	defer r.CloseWindow()
-
-	init()
-
-	for !r.WindowShouldClose() { 	// Detect window close button or ESC key
+	for !should_exit() {
 		r.GetTime()
 		update()
 		draw()
 	}
+}
 
-	shutdown()
+// Detect window close button or ESC key
+should_exit :: proc() -> bool {
+	return r.WindowShouldClose()
 }
