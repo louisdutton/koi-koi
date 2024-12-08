@@ -2,6 +2,7 @@ package main
 
 import "core:fmt"
 import "core:math"
+import "core:os"
 import "input"
 
 update :: proc() {
@@ -96,8 +97,16 @@ start_flip :: proc(player: ^Player) {
 end_turn :: proc() {
 	#partial switch state.phase {
 	case .PlayerHand, .PlayerTable, .Flip:
+		if collection_has_set(state.player.collection) {
+			fmt.println("You win!")
+			os.exit(0)
+		}
 		set_phase(.OpponentHand)
 	case .OpponentHand:
+		if collection_has_set(state.opponent.collection) {
+			fmt.println("Opponent wins...")
+			os.exit(1)
+		}
 		set_phase(.PlayerHand)
 	case:
 		fmt.panicf("can't end turn from phase %e", state.phase)
