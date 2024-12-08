@@ -1,6 +1,6 @@
 package main
 
-import "core:fmt"
+import "core:log"
 import "core:math"
 import "core:os"
 import "input"
@@ -98,18 +98,18 @@ end_turn :: proc() {
 	#partial switch state.phase {
 	case .PlayerHand, .PlayerTable, .Flip:
 		if collection_has_set(state.player.collection) {
-			fmt.println("You win!")
+			log.debug("You win!")
 			os.exit(0)
 		}
 		set_phase(.OpponentHand)
 	case .OpponentHand:
 		if collection_has_set(state.opponent.collection) {
-			fmt.println("Opponent wins...")
+			log.debug("Opponent wins...")
 			os.exit(1)
 		}
 		set_phase(.PlayerHand)
 	case:
-		fmt.panicf("can't end turn from phase %e", state.phase)
+		log.panicf("can't end turn from phase %e", state.phase)
 	}
 }
 
@@ -120,9 +120,7 @@ set_phase :: proc(phase: Phase) {
 // play the flipped card onto the table without matching
 // ends the current turn on completion
 flip_play :: proc() {
-	when ODIN_DEBUG {
-		fmt.println("flip-play", state.phase, card_get_suit(state.flip_card))
-	}
+	log.debug("flip-play", state.phase, card_get_suit(state.flip_card))
 	append(&state.table, state.flip_card)
 	end_turn()
 }
@@ -130,14 +128,12 @@ flip_play :: proc() {
 // match the flipped card with a card on the table
 // ends the current turn on completion
 flip_match :: proc(player: ^Player, target_index: int) {
-	when ODIN_DEBUG {
-		fmt.println(
-			"flip-match",
-			state.phase,
-			card_get_suit(state.flip_card),
-			card_get_suit(state.table[target_index]),
-		)
-	}
+	log.debug(
+		"flip-match",
+		state.phase,
+		card_get_suit(state.flip_card),
+		card_get_suit(state.table[target_index]),
+	)
 	append(&player.collection, state.flip_card, state.table[target_index])
 	ordered_remove(&state.table, target_index)
 	end_turn()

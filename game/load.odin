@@ -1,6 +1,6 @@
 package main
 
-import "core:fmt"
+import "core:log"
 import "core:math/rand"
 import "core:os"
 import "vendor:raylib"
@@ -18,13 +18,13 @@ load :: proc() {
 	deal()
 
 	if hand_is_instant_win(&state.player.hand) {
-		fmt.println("You win!")
+		log.debug("You win!")
 		os.exit(0)
 	}
 
 	if hand_is_instant_win(&state.opponent.hand) {
-		fmt.println("Opponent wins!")
-		os.exit(0)
+		log.debug("Opponent wins!")
+		os.exit(1)
 	}
 }
 

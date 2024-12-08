@@ -1,6 +1,6 @@
 package main
 
-import "core:fmt"
+import "core:log"
 
 collection_has_set :: proc(collection: [dynamic]Card) -> bool {
 	groups: map[CardKind]int
@@ -10,9 +10,7 @@ collection_has_set :: proc(collection: [dynamic]Card) -> bool {
 		groups[kind] += 1
 	}
 
-	when ODIN_DEBUG {
-		fmt.println(groups)
-	}
+	log.debug(groups)
 
 	// 5 scrolls
 	if groups[.Scroll] >= 5 {

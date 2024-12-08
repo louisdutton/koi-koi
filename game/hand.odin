@@ -1,19 +1,13 @@
 package main
 
-import "core:fmt"
+import "core:log"
 import "core:math"
 import "core:testing"
 
 // play a card from your hand.
 // optionally, match with a card on the table, adding both of them to your collection
 hand_play :: proc(player: ^Player, hand_index: int, table_index: Maybe(int) = nil) {
-	when ODIN_DEBUG {
-		fmt.println(
-			"play",
-			state.phase,
-			card_get_suit(player.hand[hand_index]), // fmt
-		)
-	}
+	log.debug("play", state.phase, card_get_suit(player.hand[hand_index]))
 
 	if index, ok := table_index.(int); ok {
 		// add card to collection (twice)
