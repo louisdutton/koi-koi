@@ -28,32 +28,6 @@ load :: proc() {
 	}
 }
 
-@(private = "file")
-load_state :: proc() {
-	state = GameState {
-		scene = .Play,
-		phase = .PlayerHand,
-
-		// selection
-		hand_index = 0,
-		table_index = 0,
-
-		// collections
-		deck = make([dynamic]Card, DECK_SIZE, DECK_SIZE),
-		table = make([dynamic]Card, 0, TABLE_MAX),
-
-		// players
-		player = Player {
-			hand = make([dynamic]Card, 0, HAND_SIZE),
-			collection = make([dynamic]Card, 0, DECK_SIZE),
-		},
-		opponent = Player {
-			hand = make([dynamic]Card, 0, HAND_SIZE),
-			collection = make([dynamic]Card, 0, DECK_SIZE),
-		},
-	}
-}
-
 // the number of cards dealt before moving on to the next recipient
 DEAL_INSTALLMENT_SIZE :: HAND_SIZE / 4
 
@@ -68,11 +42,4 @@ deal :: proc() {
 			}
 		}
 	}
-}
-
-@(private = "file")
-load_window :: proc() {
-	raylib.SetConfigFlags({.WINDOW_RESIZABLE, .WINDOW_UNDECORATED})
-	raylib.SetTargetFPS(FPS)
-	raylib.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TITLE)
 }

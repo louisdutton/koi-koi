@@ -48,3 +48,41 @@ GameState :: struct {
 }
 
 state: GameState
+
+load_state :: proc() {
+	state = GameState {
+		scene = .Play,
+		phase = .PlayerHand,
+
+		// selection
+		hand_index = 0,
+		table_index = 0,
+
+		// collections
+		deck = make([dynamic]Card, DECK_SIZE, DECK_SIZE),
+		table = make([dynamic]Card, 0, TABLE_MAX),
+
+		// players
+		player = Player {
+			hand = make([dynamic]Card, 0, HAND_SIZE),
+			collection = make([dynamic]Card, 0, DECK_SIZE),
+		},
+		opponent = Player {
+			hand = make([dynamic]Card, 0, HAND_SIZE),
+			collection = make([dynamic]Card, 0, DECK_SIZE),
+		},
+	}
+}
+
+unload_state :: proc() {
+	delete(state.matches)
+
+	delete(state.deck)
+	delete(state.table)
+
+	delete(state.player.collection)
+	delete(state.player.hand)
+
+	delete(state.opponent.hand)
+	delete(state.opponent.collection)
+}
