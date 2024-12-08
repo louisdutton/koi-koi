@@ -3,7 +3,6 @@ package main
 import "core:fmt"
 import "core:math"
 import "input"
-import r "vendor:raylib"
 
 update :: proc() {
 	pressed := input.get_pressed()
@@ -70,7 +69,10 @@ update :: proc() {
 		}
 
 	case .GameOver:
-		if r.IsKeyPressed(.ENTER) do state.scene = .Play
+		#partial switch pressed {
+		case .SELECT:
+			state.scene = .Play
+		}
 	}
 }
 
