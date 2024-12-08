@@ -1,25 +1,36 @@
 package main
 
+import "core:fmt"
 import "core:math"
 import "core:testing"
 
 // play a card from your hand.
 // optionally, match with a card on the table, adding both of them to your collection
 hand_play :: proc(player: ^Player, hand_index: int, table_index: Maybe(int) = nil) {
-	// remove from hand
-	ordered_remove(&player.hand, hand_index)
+	when ODIN_DEBUG {
+		fmt.println(
+			"play",
+			state.phase,
+			card_get_suit(player.hand[hand_index]), // fmt
+		)
+	}
 
 	if index, ok := table_index.(int); ok {
-		// remove from table
-		ordered_remove(&state.table, index)
-
 		// add card to collection (twice)
 		append(&player.collection, player.hand[hand_index])
 		append(&player.collection, state.table[index])
+
+		// remove from table
+		ordered_remove(&state.table, index)
+		state.table_index = 0
 	}
 
-	// prevent bounds exception
-	state.hand_index = clamp(state.hand_index, 0, len(state.player.hand))
+	// remove from hand
+	ordered_remove(&player.hand, hand_index)
+	state.hand_index = 0
+
+	// trigger next phase of the turn
+	start_flip(player)
 }
 
 

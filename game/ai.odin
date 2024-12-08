@@ -38,3 +38,7 @@ ai_calc_options :: proc() -> [dynamic][dynamic]int {
 	}
 	return options
 }
+
+ai_choose_match :: proc(matches: [dynamic]int) -> int {
+	return rand.choice(matches[:])
+}

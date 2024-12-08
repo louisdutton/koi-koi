@@ -45,7 +45,9 @@ draw_table :: proc() {
 			if !slice.contains(state.matches[:], i) {alpha = 0.5}
 			is_highlighted = state.matches[state.table_index] == i
 		case .PlayerHand:
-			is_highlighted = card_is_same_month(card, state.player.hand[state.hand_index])
+			if len(state.player.hand) > 0 {
+				is_highlighted = card_is_same_month(card, state.player.hand[state.hand_index])
+			}
 		}
 
 		draw_card(
