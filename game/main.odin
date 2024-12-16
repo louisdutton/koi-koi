@@ -2,7 +2,7 @@ package main
 
 import "core:log"
 import "core:math"
-import "timing"
+import "engine"
 import "vendor:raylib"
 
 LOGGER_OPTS := log.Options{.Level, .Terminal_Color}
@@ -22,15 +22,10 @@ main :: proc() {
 	defer unload()
 
 	// life-cycle
-	for !should_exit() {
-		delta := timing.get_delta()
-		elapsed := timing.get_elapsed()
+	for !engine.should_exit() {
+		delta := engine.get_delta()
+		elapsed := engine.get_elapsed()
 		update(delta, elapsed)
 		draw(delta)
 	}
-}
-
-// Detect window close button or ESC key
-should_exit :: proc() -> bool {
-	return raylib.WindowShouldClose()
 }

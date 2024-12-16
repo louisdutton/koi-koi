@@ -13,6 +13,6 @@ load_window :: proc() {
 	raylib.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TITLE)
 }
 
-unload_window:: proc() {
+unload_window :: proc() {
 	raylib.CloseWindow()
 }
