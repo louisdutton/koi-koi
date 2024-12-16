@@ -5,7 +5,7 @@ import "core:math"
 import "core:os"
 import "input"
 
-update :: proc() {
+update :: proc(delta: f32, elapsed: f64) {
 	pressed := input.get_pressed()
 
 	switch state.scene {

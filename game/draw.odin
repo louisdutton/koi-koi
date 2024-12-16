@@ -9,7 +9,7 @@ FONT_SIZE :: 40
 TEXT_COLOUR :: raylib.WHITE
 FONT_CENTER_VERTICAL :: SCREEN_HEIGHT / 2 - FONT_SIZE / 2
 
-draw :: proc() {
+draw :: proc(dt: f32) {
 	raylib.BeginDrawing()
 	defer raylib.EndDrawing()
 
