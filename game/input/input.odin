@@ -3,16 +3,24 @@ package input
 import "core:c"
 import "vendor:raylib"
 
+Key :: raylib.KeyboardKey
+
 Action :: enum {
-	UP     = int(raylib.KeyboardKey.K),
-	DOWN   = int(raylib.KeyboardKey.J),
-	LEFT   = int(raylib.KeyboardKey.H),
-	RIGHT  = int(raylib.KeyboardKey.L),
-	SELECT = int(raylib.KeyboardKey.ENTER),
-	PAUSE  = int(raylib.KeyboardKey.P),
-	EXIT   = int(raylib.KeyboardKey.ESCAPE),
+	UP     = int(Key.K),
+	DOWN   = int(Key.J),
+	LEFT   = int(Key.H),
+	RIGHT  = int(Key.L),
+	SELECT = int(Key.ENTER),
+	PAUSE  = int(Key.P),
+	EXIT   = int(Key.ESCAPE),
 }
 
+// Returns the current action being pressed
 get_pressed :: proc() -> Action {
-	return Action(raylib.GetKeyPressed())
+	return Action(get_key_pressed())
+}
+
+// Returns the current key being pressed
+get_key_pressed :: proc() -> Key {
+	return raylib.GetKeyPressed()
 }
