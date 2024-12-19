@@ -1,6 +1,6 @@
 # artifacts
 *.bin*
 result
-build
+.build
 .direnv
 .DS_Store

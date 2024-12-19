@@ -1,0 +1,13 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  PACKAGE: game
+  BUILD_DIR: .build
+
+tasks:
+  default:
+    cmds: 
+      - mkdir -p {{.BUILD_DIR}}
+      - odin run {{.PACKAGE}} -out={{.BUILD_DIR}}/game

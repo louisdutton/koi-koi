@@ -42,6 +42,7 @@
               ++ (with pkgs; [
                 lldb
                 resvg
+                go-task
               ]);
           };
         }
