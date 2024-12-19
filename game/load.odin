@@ -17,14 +17,15 @@ load :: proc() {
 	// deal
 	deal()
 
-	if hand_is_instant_win(&state.player.hand) {
-		log.debug("You win!")
-		os.exit(0)
+	switch {
+	case hand_is_instant_win(&state.player.hand):
+		win()
+	case hand_is_instant_win(&state.player.hand):
+		lose()
 	}
 
 	if hand_is_instant_win(&state.opponent.hand) {
-		log.debug("Opponent wins!")
-		os.exit(1)
+		lose()
 	}
 }
 
@@ -42,4 +43,14 @@ deal :: proc() {
 			}
 		}
 	}
+}
+
+win :: proc() {
+	log.debug("You win!")
+	os.exit(0)
+}
+
+lose :: proc() {
+	log.debug("Opponent wins!")
+	os.exit(1)
 }

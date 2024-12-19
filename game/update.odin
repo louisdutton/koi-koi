@@ -98,14 +98,12 @@ end_turn :: proc() {
 	#partial switch state.phase {
 	case .PlayerHand, .PlayerTable, .Flip:
 		if collection_has_set(state.player.collection) {
-			log.debug("You win!")
-			os.exit(0)
+			win()
 		}
 		set_phase(.OpponentHand)
 	case .OpponentHand:
 		if collection_has_set(state.opponent.collection) {
-			log.debug("Opponent wins...")
-			os.exit(1)
+			lose()
 		}
 		set_phase(.PlayerHand)
 	case:
