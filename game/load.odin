@@ -20,11 +20,7 @@ load :: proc() {
 	switch {
 	case hand_is_instant_win(state.player.hand[:]):
 		win()
-	case hand_is_instant_win(state.player.hand[:]):
-		lose()
-	}
-
-	if hand_is_instant_win(state.opponent.hand[:]) {
+	case hand_is_instant_win(state.opponent.hand[:]):
 		lose()
 	}
 }
