@@ -19,24 +19,36 @@ OUTLINE_THICKNESS :: 4
 // debug flags
 SHOW_OPPONENTS_HAND :: false
 
-draw_visible_hand :: proc(hand: [dynamic]Card) {
+get_center :: proc(cards: []Card) -> f32 {
+	count := len(cards)
+	return SCREEN_WIDTH / 2 - ((CARD_SIZE.x + PADDING) * f32(count) / 2)
+}
+
+draw_visible_hand :: proc(hand: []Card) {
+	center := get_center(hand)
+	y := SCREEN_HEIGHT - PADDING - CARD_SIZE.y
+
 	for card, i in hand {
-		pos := Vec2{f32(PADDING + (TABLE_SPACING * i)), SCREEN_HEIGHT - PADDING - CARD_SIZE.y}
-		draw_card(pos, card)
-		if i == state.hand_index {
-			draw_card_outline(pos)
-		}
+		draw_card(
+			Vec2{center + f32(PADDING + (TABLE_SPACING * i)), y},
+			card,
+			i == state.hand_index ? OUTLINE_COLOUR : r.BLACK,
+		)
 	}
 }
 
-draw_hidden_hand :: proc(hand: [dynamic]Card) {
+draw_hidden_hand :: proc(hand: []Card) {
+	center := get_center(hand)
+
 	for card, i in hand {
-		r.DrawRectangleV(Vec2{f32(PADDING + (TABLE_SPACING) * i), PADDING}, CARD_SIZE, r.BLACK)
+		r.DrawRectangleV(Vec2{center + f32((TABLE_SPACING) * i), PADDING}, CARD_SIZE, r.BLACK)
 	}
 }
 
-draw_table :: proc() {
-	for card, i in state.table {
+draw_table :: proc(cards: []Card) {
+	center := get_center(cards)
+
+	for card, i in cards {
 		alpha: f32 = 1.0
 		is_highlighted := false
 
@@ -51,7 +63,7 @@ draw_table :: proc() {
 		}
 
 		draw_card(
-			Vec2{f32(PADDING + (TABLE_SPACING) * i), SCREEN_HEIGHT / 2 - CARD_SIZE.y / 2},
+			Vec2{center + f32((TABLE_SPACING) * i), SCREEN_HEIGHT / 2 - CARD_SIZE.y / 2},
 			card,
 			is_highlighted ? OUTLINE_COLOUR : r.BLACK,
 			alpha,
@@ -65,6 +77,21 @@ draw_deck :: proc() {
 			Vec2{SCREEN_WIDTH * 0.75, SCREEN_HEIGHT / 2 - CARD_SIZE.y / 2},
 			CARD_SIZE,
 			r.BLACK,
+		)
+	}
+}
+
+draw_collection :: proc(collection: ^[dynamic]Card, y: f32 = 0) {
+	ROW_MAX :: 4
+	x_start :: SCREEN_WIDTH - CARD_SIZE.x - PADDING
+
+	for card, i in collection {
+		draw_card(
+			Vec2 {
+				x_start - f32(TABLE_SPACING * (i % ROW_MAX)),
+				y + f32(i / ROW_MAX) * (CARD_SIZE.y + PADDING),
+			},
+			card,
 		)
 	}
 }
@@ -94,14 +121,4 @@ draw_card :: proc(pos: Vec2, card: Card, border := r.BLACK, alpha: f32 = 1.0) {
 			r.Fade(r.BLACK, alpha),
 		)
 	}
-}
-
-draw_card_outline :: proc(pos: Vec2) {
-	rect := Rect {
-		pos.x - OUTLINE_OFFSET / 2,
-		pos.y - OUTLINE_OFFSET / 2,
-		CARD_SIZE.x + OUTLINE_OFFSET,
-		CARD_SIZE.y + OUTLINE_OFFSET,
-	}
-	r.DrawRectangleLinesEx(rect, OUTLINE_THICKNESS, OUTLINE_COLOUR)
 }

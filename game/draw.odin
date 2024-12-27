@@ -27,10 +27,12 @@ draw :: proc(dt: f32) {
 }
 
 draw_play :: proc() {
-	draw_visible_hand(state.player.hand)
-	draw_hidden_hand(state.opponent.hand)
-	draw_table()
+	draw_visible_hand(state.player.hand[:])
+	draw_hidden_hand(state.opponent.hand[:])
+	draw_table(state.table[:])
 	draw_deck()
+	draw_collection(&state.player.collection, SCREEN_HEIGHT - CARD_SIZE.y - PADDING)
+	draw_collection(&state.opponent.collection, PADDING)
 
 	// canvas layer
 	draw_ui()
