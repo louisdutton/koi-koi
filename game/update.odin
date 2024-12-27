@@ -118,7 +118,7 @@ set_phase :: proc(phase: Phase) {
 // play the flipped card onto the table without matching
 // ends the current turn on completion
 flip_play :: proc() {
-	log.debug("flip-play", state.phase, card_get_suit(state.flip_card))
+	log.debug("flip-play", state.phase, state.flip_card)
 	append(&state.table, state.flip_card)
 	end_turn()
 }
@@ -126,12 +126,7 @@ flip_play :: proc() {
 // match the flipped card with a card on the table
 // ends the current turn on completion
 flip_match :: proc(player: ^Player, target_index: int) {
-	log.debug(
-		"flip-match",
-		state.phase,
-		card_get_suit(state.flip_card),
-		card_get_suit(state.table[target_index]),
-	)
+	log.debug("flip-match", state.phase, state.flip_card, state.table[target_index])
 	append(&player.collection, state.flip_card, state.table[target_index])
 	ordered_remove(&state.table, target_index)
 	end_turn()

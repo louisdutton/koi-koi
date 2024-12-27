@@ -7,9 +7,8 @@ import "core:testing"
 // play a card from your hand.
 // optionally, match with a card on the table, adding both of them to your collection
 hand_play :: proc(player: ^Player, hand_index: int, table_index: Maybe(int) = nil) {
-	log.debug("play", state.phase, card_get_suit(player.hand[hand_index]))
-
 	if index, ok := table_index.(int); ok {
+		log.debug("match", state.phase, player.hand[hand_index], state.table[index])
 		// add card to collection (twice)
 		append(&player.collection, player.hand[hand_index])
 		append(&player.collection, state.table[index])
@@ -17,6 +16,8 @@ hand_play :: proc(player: ^Player, hand_index: int, table_index: Maybe(int) = ni
 		// remove from table
 		ordered_remove(&state.table, index)
 		state.table_index = 0
+	} else {
+		log.debug("play", state.phase, player.hand[hand_index])
 	}
 
 	// remove from hand

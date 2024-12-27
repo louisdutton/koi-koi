@@ -1,6 +1,7 @@
 package main
 
 import "core:fmt"
+import "core:reflect"
 import "core:strings"
 import "vendor:raylib"
 
@@ -36,19 +37,12 @@ draw_play :: proc() {
 }
 
 draw_ui :: proc() {
-	text: cstring
-	switch state.phase {
-	case .PlayerHand:
-		text = "Player Hand"
-	case .PlayerTable:
-		text = "Player Table"
-	case .Flip:
-		text = "Flip"
-	case .OpponentHand:
-		text = "Opponent Hand"
+	when ODIN_DEBUG {
+		text, _ := reflect.enum_name_from_value(state.phase)
+		ctext := strings.clone_to_cstring(text)
+		defer delete(ctext)
+		draw_centered_text(ctext, 40)
 	}
-
-	draw_centered_text(text, 40)
 }
 
 draw_pause :: proc() {
