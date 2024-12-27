@@ -11,8 +11,7 @@ update :: proc(delta: f32, elapsed: f64) {
 	switch state.scene {
 	case .Pause:
 		#partial switch pressed {
-		case .PAUSE:
-			state.scene = .Play
+		case .PAUSE: state.scene = .Play
 		}
 
 	case .Play:
@@ -21,10 +20,8 @@ update :: proc(delta: f32, elapsed: f64) {
 		switch state.phase {
 		case .PlayerHand:
 			#partial switch pressed {
-			case .LEFT:
-				state.hand_index = max(state.hand_index - 1, 0)
-			case .RIGHT:
-				state.hand_index = min(state.hand_index + 1, len(state.player.hand) - 1)
+			case .LEFT: state.hand_index = max(state.hand_index - 1, 0)
+			case .RIGHT: state.hand_index = min(state.hand_index + 1, len(state.player.hand) - 1)
 			case .SELECT:
 				get_matches(state.player.hand[state.hand_index])
 				switch len(state.matches) {
@@ -39,20 +36,16 @@ update :: proc(delta: f32, elapsed: f64) {
 
 		case .PlayerTable:
 			#partial switch pressed {
-			case .LEFT:
-				state.table_index = max(state.table_index - 1, 0)
-			case .RIGHT:
-				state.table_index = min(state.table_index + 1, len(state.matches) - 1)
+			case .LEFT: state.table_index = max(state.table_index - 1, 0)
+			case .RIGHT: state.table_index = min(state.table_index + 1, len(state.matches) - 1)
 			case .SELECT:
 				hand_play(&state.player, state.hand_index, state.matches[state.table_index])
 			}
 
 		case .Flip:
 			#partial switch pressed {
-			case .LEFT:
-				state.table_index = max(state.table_index - 1, 0)
-			case .RIGHT:
-				state.table_index = min(state.table_index + 1, len(state.matches) - 1)
+			case .LEFT: state.table_index = max(state.table_index - 1, 0)
+			case .RIGHT: state.table_index = min(state.table_index + 1, len(state.matches) - 1)
 			case .SELECT:
 				flip_match(&state.player, state.table_index)
 			}
@@ -64,8 +57,7 @@ update :: proc(delta: f32, elapsed: f64) {
 
 	case .GameOver:
 		#partial switch pressed {
-		case .SELECT:
-			state.scene = .Play
+		case .SELECT: state.scene = .Play
 		}
 	}
 }
