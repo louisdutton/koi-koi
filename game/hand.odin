@@ -37,12 +37,9 @@ hand_is_instant_win :: proc(hand: ^[dynamic]Card) -> bool {
 	)
 
 	// group cards by month
-	groups: map[u8]int
+	groups: map[Suit]int
 	defer delete(groups)
-	for card in hand {
-		key := card / MONTH_SIZE
-		groups[key] += 1
-	}
+	for card in hand do groups[card_get_suit(card)] += 1
 
 	pair_count := 0
 	for _, v in groups {
@@ -62,14 +59,14 @@ hand_is_instant_win :: proc(hand: ^[dynamic]Card) -> bool {
 
 @(test)
 test_four_of_a_kind :: proc(t: ^testing.T) {
-	hand := [dynamic]Card{0, 1, 2, 3, 4, 5, 6, 7}
+	hand := [dynamic]Card{.Jan0, .Jan1, .Jan2, .Jan3, .Feb0, .Feb1, .Feb2, .Feb3}
 	defer delete(hand)
 	testing.expect(t, hand_is_instant_win(&hand) == true)
 }
 
 @(test)
 test_four_pair :: proc(t: ^testing.T) {
-	hand := [dynamic]Card{0, 1, 4, 5, 8, 9, 12, 13}
+	hand := [dynamic]Card{.Jan0, .Jan1, .Feb0, .Feb1, .Mar0, .Mar1, .Apr0, .Apr1}
 	defer delete(hand)
 	testing.expect(t, hand_is_instant_win(&hand) == true)
 }

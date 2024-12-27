@@ -1,7 +1,7 @@
 package main
 
 card_from_suit :: proc(suit: Suit, index: u8) -> Card {
-	return u8(suit) * MONTH_SIZE + index
+	return Card(u8(suit) * MONTH_SIZE + index)
 }
 
 card_is_same_month :: proc(a: Card, b: Card) -> bool {
@@ -9,7 +9,7 @@ card_is_same_month :: proc(a: Card, b: Card) -> bool {
 }
 
 card_get_suit :: proc(card: Card) -> Suit {
-	return Suit(card / MONTH_SIZE)
+	return Suit(u8(card) / MONTH_SIZE)
 }
 
 card_get_kind :: proc(card: Card) -> CardKind {

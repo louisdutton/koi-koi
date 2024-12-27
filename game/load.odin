@@ -11,7 +11,7 @@ load :: proc() {
 	load_state()
 
 	// populate and shuffle deck
-	for i in 0 ..< DECK_SIZE {state.deck[i] = u8(i)}
+	for i in 0 ..< DECK_SIZE {state.deck[i] = Card(i)}
 	rand.shuffle(state.deck[:])
 
 	// deal

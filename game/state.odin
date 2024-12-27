@@ -1,10 +1,14 @@
 package main
 
-// card counts
+// the maximum number of cards allowed in the hand
 HAND_SIZE :: 8
+// the maximum number of cards allowed on the table
 TABLE_MAX :: HAND_SIZE * 2
+// the number of cards per month
 MONTH_SIZE :: 4
+// the number of months
 MONTH_COUNT :: 12
+// the number of cards in the deck
 DECK_SIZE :: MONTH_SIZE * MONTH_COUNT
 
 Player :: struct {

@@ -81,7 +81,7 @@ draw_card :: proc(pos: Vec2, card: Card, border := r.BLACK, alpha: f32 = 1.0) {
 
 	when ODIN_DEBUG {
 		// card number
-		text := strings.clone_to_cstring(fmt.tprintf("%v", card / MONTH_SIZE + 1))
+		text := strings.clone_to_cstring(fmt.tprintf("%v", u8(card) / MONTH_SIZE + 1))
 		defer delete(text)
 		font_size: i32 = 20
 		text_width: i32 = r.MeasureText(text, font_size)

@@ -10,4 +10,4 @@ tasks:
   default:
     cmds: 
       - mkdir -p {{.BUILD_DIR}}
-      - odin run {{.PACKAGE}} -out={{.BUILD_DIR}}/game
+      - odin run {{.PACKAGE}} -out={{.BUILD_DIR}}/game -debug
