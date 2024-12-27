@@ -105,20 +105,4 @@ draw_card :: proc(pos: Vec2, card: Card, border := r.BLACK, alpha: f32 = 1.0) {
 	)
 	tex := get_card_texture(card)
 	r.DrawTextureEx(tex, pos + CARD_BORDER_WIDTH, 0, 0.102, r.Fade(r.WHITE, alpha))
-
-	when ODIN_DEBUG {
-		// card number
-		text := strings.clone_to_cstring(fmt.tprintf("%v", u8(card) / MONTH_SIZE + 1))
-		defer delete(text)
-		font_size: i32 = 20
-		text_width: i32 = r.MeasureText(text, font_size)
-
-		r.DrawText(
-			text,
-			i32(pos.x + CARD_SIZE.x / 2) - text_width / 2,
-			i32(pos.y + CARD_SIZE.y / 2) - font_size / 2,
-			font_size,
-			r.Fade(r.BLACK, alpha),
-		)
-	}
 }
