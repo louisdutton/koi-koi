@@ -22,7 +22,7 @@ load_texture :: proc(path: string) -> Texture {
 	return r.LoadTexture(c_path)
 }
 
-load_images :: proc() {
+load_textures :: proc() {
 	for m in 0 ..< MONTH_COUNT {
 		for c in 0 ..< MONTH_SIZE {
 			index := (m * MONTH_SIZE) + c
@@ -31,7 +31,7 @@ load_images :: proc() {
 	}
 }
 
-unload_images :: proc() {
+unload_textures :: proc() {
 	for tex in card_textures {
 		r.UnloadTexture(tex)
 	}

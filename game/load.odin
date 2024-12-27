@@ -7,7 +7,7 @@ import "vendor:raylib"
 
 load :: proc() {
 	load_window()
-	load_images()
+	load_textures()
 	load_state()
 
 	// populate and shuffle deck
