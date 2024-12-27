@@ -3,8 +3,8 @@ package main
 import "vendor:raylib"
 
 TITLE :: "Koi-Koi"
-SCREEN_WIDTH :: 800
-SCREEN_HEIGHT :: 450
+SCREEN_WIDTH :: 1200
+SCREEN_HEIGHT :: 800
 FPS :: 60
 
 load_window :: proc() {
