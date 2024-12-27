@@ -81,16 +81,28 @@ draw_deck :: proc() {
 	}
 }
 
-draw_collection :: proc(collection: ^[dynamic]Card, y: f32 = 0) {
-	ROW_MAX :: 4
+Anchor :: enum u8 {
+	TopRight,
+	BottomRight,
+}
+
+draw_collection :: proc(collection: ^[dynamic]Card, anchor: Anchor) {
+	ROW_MAX :: 5
 	x_start :: SCREEN_WIDTH - CARD_SIZE.x - PADDING
+	y_start: f32
+	dy: f32
+	switch anchor {
+	case .TopRight:
+		y_start = PADDING
+		dy = CARD_SIZE.y + PADDING
+	case .BottomRight:
+		y_start = SCREEN_HEIGHT - PADDING - CARD_SIZE.y
+		dy = -(CARD_SIZE.y + PADDING)
+	}
 
 	for card, i in collection {
 		draw_card(
-			Vec2 {
-				x_start - f32(TABLE_SPACING * (i % ROW_MAX)),
-				y + f32(i / ROW_MAX) * (CARD_SIZE.y + PADDING),
-			},
+			Vec2{x_start - f32(TABLE_SPACING * (i % ROW_MAX)), y_start + f32(i / ROW_MAX) * dy},
 			card,
 		)
 	}

@@ -31,8 +31,8 @@ draw_play :: proc() {
 	draw_hidden_hand(state.opponent.hand[:])
 	draw_table(state.table[:])
 	draw_deck()
-	draw_collection(&state.player.collection, SCREEN_HEIGHT - CARD_SIZE.y - PADDING)
-	draw_collection(&state.opponent.collection, PADDING)
+	draw_collection(&state.player.collection, .BottomRight)
+	draw_collection(&state.opponent.collection, .TopRight)
 
 	// canvas layer
 	draw_ui()
