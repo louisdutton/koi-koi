@@ -27,12 +27,20 @@ draw :: proc(dt: f32) {
 }
 
 draw_play :: proc() {
-	draw_visible_hand(state.player.hand[:])
-	draw_hidden_hand(state.opponent.hand[:])
-	draw_table(state.table[:])
+	// collection
 	draw_deck()
-	draw_collection(&state.player.collection, .BottomRight)
-	draw_collection(&state.opponent.collection, .TopRight)
+
+	// individual cards
+	entities := prepare_entities()
+	entity_count :=
+		len(state.player.hand) +
+		len(state.player.collection) +
+		len(state.opponent.hand) +
+		len(state.opponent.collection) +
+		len(state.table)
+	for card, i in entities[:entity_count] {
+		draw_card(card)
+	}
 
 	// canvas layer
 	draw_ui()
