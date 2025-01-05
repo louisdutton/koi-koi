@@ -20,7 +20,7 @@ YAKU_POINTS :: [Yaku]u8 {
 	.MoonViewing          = 5,
 }
 
-collection_has_set :: proc(collection: [dynamic]Card) -> bool {
+collection_has_yaku :: proc(collection: [dynamic]Card) -> bool {
 	groups: map[CardKind]int
 	defer delete(groups)
 	for card in collection {

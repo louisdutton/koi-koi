@@ -89,12 +89,12 @@ start_flip :: proc(player: ^Player) {
 end_turn :: proc() {
 	#partial switch state.phase {
 	case .PlayerHand, .PlayerTable, .Flip:
-		if collection_has_set(state.player.collection) {
+		if collection_has_yaku(state.player.collection) {
 			win()
 		}
 		set_phase(.OpponentHand)
 	case .OpponentHand:
-		if collection_has_set(state.opponent.collection) {
+		if collection_has_yaku(state.opponent.collection) {
 			lose()
 		}
 		set_phase(.PlayerHand)
