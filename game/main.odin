@@ -22,10 +22,14 @@ main :: proc() {
 	defer unload()
 
 	// life-cycle
-	for !engine.should_exit() {
+	for !should_exit() {
 		delta := engine.get_delta()
 		elapsed := engine.get_elapsed()
 		update(delta, elapsed)
 		draw(delta)
 	}
+}
+
+should_exit :: proc() -> bool {
+	return raylib.WindowShouldClose()
 }
