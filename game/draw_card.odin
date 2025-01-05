@@ -19,7 +19,7 @@ OUTLINE_THICKNESS :: 4
 // debug flags
 SHOW_OPPONENTS_HAND :: false
 
-
+// renders the given card
 draw_card :: proc(card: CardEntity) {
 	if (.Hidden in card.flags) {
 		r.DrawRectangleV(card.position, CARD_SIZE, r.BLACK)
@@ -39,6 +39,7 @@ draw_card :: proc(card: CardEntity) {
 	r.DrawTextureEx(tex, card.position + CARD_BORDER_WIDTH, 0, 0.102, r.Fade(r.WHITE, alpha))
 }
 
+// renders the deck
 draw_deck :: proc() {
 	r.DrawRectangleV(
 		Vec2{SCREEN_WIDTH * 0.75, SCREEN_HEIGHT / 2 - CARD_SIZE.y / 2},
