@@ -31,7 +31,7 @@ ai_play :: proc(hand: [dynamic]Card) -> (hand_index: int, table_index: Maybe(int
 ai_calc_options :: proc() -> [dynamic][dynamic]int {
 	options := make([dynamic][dynamic]int)
 	for card in state.opponent.hand {
-		get_matches(card)
+		matches := get_matches(card, state.table[:])
 		if len(state.matches) > 0 {
 			append(&options, state.matches)
 		}
@@ -39,6 +39,6 @@ ai_calc_options :: proc() -> [dynamic][dynamic]int {
 	return options
 }
 
-ai_choose_match :: proc(matches: [dynamic]int) -> int {
-	return rand.choice(matches[:])
+ai_choose_match :: proc(matches: []int) -> int {
+	return rand.choice(matches)
 }
