@@ -96,19 +96,22 @@ start_flip :: proc(player: ^Player) {
 end_turn :: proc() {
 	#partial switch state.phase {
 	case .PlayerHand, .PlayerTable, .Flip:
-		if collection_has_yaku(state.player.collection) do win()
+		if collection_has_yaku(state.player.collection) {
+			win()
+		}
 		set_phase(.OpponentHand)
 	case .OpponentHand:
-		if collection_has_yaku(state.opponent.collection) do lose()
+		if collection_has_yaku(state.opponent.collection) {
+			lose()
+		}
 		set_phase(.PlayerHand)
 	case:
 		log.panicf("can't end turn from phase %e", state.phase)
 	}
 }
 
-set_phase :: proc(phase: Phase) {
-	state.phase = phase
-}
+set_phase :: proc(phase: Phase) {state.phase = phase}
+set_scene :: proc(scene: Scene) {state.scene = scene}
 
 // play the flipped card onto the table without matching
 // ends the current turn on completion

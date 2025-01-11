@@ -22,7 +22,7 @@ draw :: proc(dt: f32) {
 	case .Pause:
 		draw_pause()
 	case .GameOver:
-		draw_pause()
+		draw_game_over()
 	}
 }
 
@@ -59,6 +59,12 @@ draw_pause :: proc() {
 	draw_play()
 	fill_screen(raylib.Fade(raylib.BLACK, 0.75))
 	draw_centered_text("Paused")
+}
+
+draw_game_over :: proc() {
+	draw_play()
+	fill_screen(raylib.Fade(raylib.BLACK, 0.75))
+	draw_centered_text("Game over")
 }
 
 fill_screen :: proc(color: Color) {

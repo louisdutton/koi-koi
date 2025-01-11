@@ -43,10 +43,10 @@ deal :: proc() {
 
 win :: proc() {
 	log.debug("You win!")
-	os.exit(0)
+	set_scene(.GameOver)
 }
 
 lose :: proc() {
 	log.debug("Opponent wins!")
-	os.exit(1)
+	set_scene(.GameOver)
 }
