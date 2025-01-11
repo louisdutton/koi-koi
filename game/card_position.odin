@@ -16,7 +16,7 @@ CardEntity :: struct {
 	flags:    CardFlags,
 }
 
-prepare_entities :: proc() -> (entities: [DECK_SIZE]CardEntity) {
+prepare_entities :: proc() -> (entities: [DECK_SIZE]CardEntity, count: int) {
 	i := 0
 
 	// player
@@ -103,7 +103,7 @@ prepare_entities :: proc() -> (entities: [DECK_SIZE]CardEntity) {
 		i += 1
 	}
 
-	return
+	return entities, i
 }
 
 @(private = "file")

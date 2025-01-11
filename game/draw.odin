@@ -1,20 +1,19 @@
 package main
 
-import "core:fmt"
+import "color"
 import "core:reflect"
-import "core:strings"
-import "vendor:raylib"
 
 PADDING :: 10
 FONT_SIZE :: 40
-TEXT_COLOUR :: raylib.WHITE
+TEXT_COLOUR :: color.WHITE
 FONT_CENTER_VERTICAL :: SCREEN_HEIGHT / 2 - FONT_SIZE / 2
+bg_overlay := color.fade(color.BLACK, 0.75)
 
 draw :: proc(dt: f32) {
-	raylib.BeginDrawing()
-	defer raylib.EndDrawing()
+	draw_start()
+	defer draw_end()
 
-	raylib.ClearBackground(raylib.GRAY)
+	clear_screen(color.GRAY)
 
 	switch state.scene {
 	case .Play:
@@ -26,52 +25,34 @@ draw :: proc(dt: f32) {
 	}
 }
 
+@(private = "file")
 draw_play :: proc() {
 	// collection
 	draw_deck()
 
 	// individual cards
-	entities := prepare_entities()
-	entity_count :=
-		len(state.player.hand) +
-		len(state.player.collection) +
-		len(state.opponent.hand) +
-		len(state.opponent.collection) +
-		len(state.table)
-	for card, i in entities[:entity_count] {
+	entities, count := prepare_entities()
+	for card, i in entities[:count] {
 		draw_card(card)
 	}
 
 	// canvas layer
-	draw_ui()
-}
-
-draw_ui :: proc() {
 	when ODIN_DEBUG {
 		text, _ := reflect.enum_name_from_value(state.phase)
-		ctext := strings.clone_to_cstring(text)
-		defer delete(ctext)
-		draw_centered_text(ctext, 40)
+		draw_centered_text(text, 40)
 	}
 }
 
+@(private = "file")
 draw_pause :: proc() {
 	draw_play()
-	fill_screen(raylib.Fade(raylib.BLACK, 0.75))
+	fill_screen(bg_overlay)
 	draw_centered_text("Paused")
 }
 
+@(private = "file")
 draw_game_over :: proc() {
 	draw_play()
-	fill_screen(raylib.Fade(raylib.BLACK, 0.75))
+	fill_screen(bg_overlay)
 	draw_centered_text("Game over")
-}
-
-fill_screen :: proc(color: Color) {
-	raylib.DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, color)
-}
-
-draw_centered_text :: proc(text: cstring, y: i32 = FONT_CENTER_VERTICAL) {
-	w := raylib.MeasureText(text, FONT_SIZE)
-	raylib.DrawText(text, SCREEN_WIDTH / 2 - w / 2, y, FONT_SIZE, TEXT_COLOUR)
 }
