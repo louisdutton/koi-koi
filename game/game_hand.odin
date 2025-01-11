@@ -1,33 +1,6 @@
 package main
 
-import "core:log"
-import "core:math"
 import "core:testing"
-
-// play a card from your hand.
-// optionally, match with a card on the table, adding both of them to your collection
-hand_play :: proc(player: ^Player, hand_index: int, table_index: Maybe(int) = nil) {
-	if index, ok := table_index.(int); ok {
-		log.debug("match", state.phase, player.hand[hand_index], state.table[index])
-		// add card to collection (twice)
-		append(&player.collection, player.hand[hand_index])
-		append(&player.collection, state.table[index])
-
-		// remove from table
-		ordered_remove(&state.table, index)
-		state.table_index = 0
-	} else {
-		log.debug("play", state.phase, player.hand[hand_index])
-	}
-
-	// remove from hand
-	ordered_remove(&player.hand, hand_index)
-	state.hand_index = 0
-
-	// trigger next phase of the turn
-	start_flip(player)
-}
-
 
 // Returns true if a hand has been dealt an instant win.
 // An instant win occurs when a player is dealt either 4 of a kind or 4 pairs.
