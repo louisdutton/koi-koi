@@ -1,6 +1,5 @@
 package main
 
-import sa "core:container/small_array"
 import "core:log"
 import "core:math"
 import "core:os"
@@ -21,8 +20,10 @@ update :: proc(delta: f32, elapsed: f64) {
 		switch state.phase {
 		case .PlayerHand:
 			#partial switch pressed {
-			case .LEFT: state.hand_index = max(state.hand_index - 1, 0)
-			case .RIGHT: state.hand_index = min(state.hand_index + 1, len(state.player.hand) - 1)
+			case .LEFT:
+				shift_left(&state.hand_index)
+			case .RIGHT:
+				shift_right(&state.hand_index, len(state.player.hand))
 			case .SELECT:
 				state.matches = get_matches(state.player.hand[state.hand_index], state.table[:])
 				switch len(state.matches) {
@@ -37,16 +38,20 @@ update :: proc(delta: f32, elapsed: f64) {
 
 		case .PlayerTable:
 			#partial switch pressed {
-			case .LEFT: state.table_index = max(state.table_index - 1, 0)
-			case .RIGHT: state.table_index = min(state.table_index + 1, len(state.matches) - 1)
+			case .LEFT:
+				shift_left(&state.table_index)
+			case .RIGHT:
+				shift_right(&state.table_index, len(state.matches))
 			case .SELECT:
 				hand_play(&state.player, state.hand_index, state.matches[state.table_index])
 			}
 
 		case .Flip:
 			#partial switch pressed {
-			case .LEFT: state.table_index = max(state.table_index - 1, 0)
-			case .RIGHT: state.table_index = min(state.table_index + 1, len(state.matches) - 1)
+			case .LEFT:
+				shift_left(&state.table_index)
+			case .RIGHT:
+				shift_right(&state.table_index, len(state.matches))
 			case .SELECT:
 				flip_match(&state.player, state.table_index)
 			}
@@ -62,6 +67,7 @@ update :: proc(delta: f32, elapsed: f64) {
 		}
 	}
 }
+
 
 start_flip :: proc(player: ^Player) {
 	state.flip_card = pop(&state.deck)
@@ -122,8 +128,8 @@ flip_match :: proc(player: ^Player, target_index: int) {
 }
 
 // returns the indices of matchable cards from the given collection
-get_matches :: proc(target: Card, collection: []Card) -> (matches: [dynamic]int) {
-	for card, i in collection {
+get_matches :: proc(target: Card, source: []Card) -> (matches: [dynamic]int) {
+	for card, i in source {
 		if card_is_same_month(card, target) {
 			append(&matches, i)
 		}
