@@ -7,6 +7,7 @@ import "input"
 
 update :: proc(delta: f32, elapsed: f64) {
 	handle_input()
+	prepare_entities()
 }
 
 handle_input :: proc() {
@@ -29,7 +30,10 @@ handle_input :: proc() {
 			case .RIGHT:
 				shift_right(&state.hand_index, len(state.player.hand))
 			case .SELECT:
-				state.matches = get_matches(state.player.hand[state.hand_index], state.table[:])
+				state.matches = get_matches(
+					state.player.hand[state.hand_index].card,
+					state.table[:],
+				)
 				switch len(state.matches) {
 				case 0:
 					hand_play(&state.player, state.hand_index)
@@ -61,7 +65,7 @@ handle_input :: proc() {
 			}
 
 		case .OpponentHand:
-			hand_index, table_index := ai_play(state.opponent.hand)
+			hand_index, table_index := ai_play(state.opponent.hand[:])
 			hand_play(&state.opponent, hand_index, table_index)
 		}
 

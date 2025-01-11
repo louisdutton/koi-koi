@@ -1,5 +1,21 @@
 package main
 
+import "core:slice"
+
+CardFlag :: enum u8 {
+	Outline,
+	Hidden,
+	Faded,
+}
+
+CardFlags :: bit_set[CardFlag]
+
+CardEntity :: struct {
+	card:     Card,
+	position: Vec2,
+	flags:    CardFlags,
+}
+
 card_from_suit :: proc(suit: Suit, index: u8) -> Card {
 	return Card(u8(suit) * MONTH_SIZE + index)
 }

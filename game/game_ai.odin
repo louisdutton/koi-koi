@@ -3,7 +3,7 @@ package main
 import "core:math/rand"
 
 // returns the index of the chosen card to be played
-ai_play :: proc(hand: [dynamic]Card) -> (hand_index: int, table_index: Maybe(int)) {
+ai_play :: proc(hand: []CardEntity) -> (hand_index: int, table_index: Maybe(int)) {
 	card_count := len(hand)
 
 	if (card_count == 0) {
@@ -31,7 +31,7 @@ ai_play :: proc(hand: [dynamic]Card) -> (hand_index: int, table_index: Maybe(int
 ai_calc_options :: proc() -> [dynamic][dynamic]int {
 	options := make([dynamic][dynamic]int)
 	for card in state.opponent.hand {
-		matches := get_matches(card, state.table[:])
+		matches := get_matches(card.card, state.table[:])
 		if len(state.matches) > 0 {
 			append(&options, state.matches)
 		}

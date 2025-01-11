@@ -11,7 +11,9 @@ load :: proc() {
 	load_state()
 
 	// populate and shuffle deck
-	for i in 0 ..< DECK_SIZE {state.deck[i] = Card(i)}
+	for i in 0 ..< DECK_SIZE {state.deck[i] = {
+			card = Card(i),
+		}}
 	rand.shuffle(state.deck[:])
 
 	// deal
@@ -32,10 +34,14 @@ DEAL_INSTALLMENT_SIZE :: HAND_SIZE / 4
 @(private = "file")
 deal :: proc() {
 	for i in 0 ..< HAND_SIZE / DEAL_INSTALLMENT_SIZE {
-		recipients := [3]^[dynamic]Card{&state.opponent.hand, &state.table, &state.player.hand}
+		recipients := [3]^[dynamic]CardEntity {
+			&state.opponent.hand,
+			&state.table,
+			&state.player.hand,
+		}
 		for r in recipients {
 			for i in 0 ..< DEAL_INSTALLMENT_SIZE {
-				append(r, pop(&state.deck))
+				append(r, CardEntity{card = pop(&state.deck).card})
 			}
 		}
 	}

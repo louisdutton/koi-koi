@@ -31,11 +31,11 @@ draw_play :: proc() {
 	draw_deck()
 
 	// individual cards
-	entities := prepare_entities()
-	defer delete(entities)
-	for card, i in entities[:] {
-		draw_card(card)
-	}
+	for card in state.player.hand {draw_card(card)}
+	for card in state.player.collection {draw_card(card)}
+	for card in state.opponent.hand {draw_card(card)}
+	for card in state.opponent.collection {draw_card(card)}
+	for card in state.table {draw_card(card)}
 
 	// canvas layer
 	when ODIN_DEBUG {

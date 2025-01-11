@@ -4,7 +4,7 @@ import "core:log"
 
 start_flip :: proc(player: ^Player) {
 	state.flip_card = pop(&state.deck)
-	state.matches = get_matches(state.flip_card, state.table[:])
+	state.matches = get_matches(state.flip_card.card, state.table[:])
 	switch len(state.matches) {
 	// can't match so add it to the table and end turn
 	case 0:
@@ -29,12 +29,12 @@ start_flip :: proc(player: ^Player) {
 end_turn :: proc() {
 	#partial switch state.phase {
 	case .PlayerHand, .PlayerTable, .Flip:
-		if collection_has_yaku(state.player.collection) {
+		if collection_has_yaku(state.player.collection[:]) {
 			win()
 		}
 		set_phase(.OpponentHand)
 	case .OpponentHand:
-		if collection_has_yaku(state.opponent.collection) {
+		if collection_has_yaku(state.opponent.collection[:]) {
 			lose()
 		}
 		set_phase(.PlayerHand)
@@ -46,7 +46,7 @@ end_turn :: proc() {
 // play the flipped card onto the table without matching
 // ends the current turn on completion
 flip_play :: proc() {
-	log.debug("flip-play", state.phase, state.flip_card)
+	log.debug("flip-play", state.phase, state.flip_card.card)
 	append(&state.table, state.flip_card)
 	end_turn()
 }
@@ -54,7 +54,7 @@ flip_play :: proc() {
 // match the flipped card with a card on the table
 // ends the current turn on completion
 flip_match :: proc(player: ^Player, target_index: int) {
-	log.debug("flip-match", state.phase, state.flip_card, state.table[target_index])
+	log.debug("flip-match", state.phase, state.flip_card.card, state.table[target_index].card)
 	append(&player.collection, state.flip_card, state.table[target_index])
 	ordered_remove(&state.table, target_index)
 	end_turn()
@@ -64,7 +64,7 @@ flip_match :: proc(player: ^Player, target_index: int) {
 // optionally, match with a card on the table, adding both of them to your collection
 hand_play :: proc(player: ^Player, hand_index: int, table_index: Maybe(int) = nil) {
 	if index, ok := table_index.(int); ok {
-		log.debug("match", state.phase, player.hand[hand_index], state.table[index])
+		log.debug("match", state.phase, player.hand[hand_index].card, state.table[index].card)
 		// add card to collection (twice)
 		append(&player.collection, player.hand[hand_index])
 		append(&player.collection, state.table[index])
@@ -73,7 +73,7 @@ hand_play :: proc(player: ^Player, hand_index: int, table_index: Maybe(int) = ni
 		ordered_remove(&state.table, index)
 		state.table_index = 0
 	} else {
-		log.debug("play", state.phase, player.hand[hand_index])
+		log.debug("play", state.phase, player.hand[hand_index].card)
 	}
 
 	// remove from hand
@@ -85,9 +85,9 @@ hand_play :: proc(player: ^Player, hand_index: int, table_index: Maybe(int) = ni
 }
 
 // returns the indices of matchable cards from the given collection
-get_matches :: proc(target: Card, source: []Card) -> (matches: [dynamic]int) {
+get_matches :: proc(target: Card, source: []CardEntity) -> (matches: [dynamic]int) {
 	for card, i in source {
-		if card_is_same_month(card, target) {
+		if card_is_same_month(card.card, target) {
 			append(&matches, i)
 		}
 	}

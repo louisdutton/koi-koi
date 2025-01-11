@@ -12,8 +12,8 @@ MONTH_COUNT :: 12
 DECK_SIZE :: MONTH_SIZE * MONTH_COUNT
 
 Player :: struct {
-	hand:       [dynamic]Card,
-	collection: [dynamic]Card,
+	hand:       [dynamic]CardEntity,
+	collection: [dynamic]CardEntity,
 }
 
 Scene :: enum u8 {
@@ -40,11 +40,11 @@ GameState :: struct {
 
 	// buffers
 	matches:     [dynamic]int, // table indices
-	flip_card:   Card,
+	flip_card:   CardEntity,
 
 	// collections
-	deck:        [dynamic]Card,
-	table:       [dynamic]Card,
+	deck:        [dynamic]CardEntity,
+	table:       [dynamic]CardEntity,
 
 	// players
 	player:      Player,
@@ -63,17 +63,17 @@ load_state :: proc() {
 		table_index = 0,
 
 		// collections
-		deck = make([dynamic]Card, DECK_SIZE, DECK_SIZE),
-		table = make([dynamic]Card, 0, TABLE_MAX),
+		deck = make([dynamic]CardEntity, DECK_SIZE, DECK_SIZE),
+		table = make([dynamic]CardEntity, 0, TABLE_MAX),
 
 		// players
 		player = Player {
-			hand = make([dynamic]Card, 0, HAND_SIZE),
-			collection = make([dynamic]Card, 0, DECK_SIZE),
+			hand = make([dynamic]CardEntity, 0, HAND_SIZE),
+			collection = make([dynamic]CardEntity, 0, DECK_SIZE),
 		},
 		opponent = Player {
-			hand = make([dynamic]Card, 0, HAND_SIZE),
-			collection = make([dynamic]Card, 0, DECK_SIZE),
+			hand = make([dynamic]CardEntity, 0, HAND_SIZE),
+			collection = make([dynamic]CardEntity, 0, DECK_SIZE),
 		},
 	}
 }

@@ -20,18 +20,18 @@ YAKU_POINTS :: [Yaku]u8 {
 	.MoonViewing          = 5,
 }
 
-collection_has_yaku :: proc(collection: [dynamic]Card) -> bool {
+collection_has_yaku :: proc(collection: []CardEntity) -> bool {
 	groups: map[CardKind]int
 	defer delete(groups)
 	for card in collection {
-		kind := card_get_kind(card)
+		kind := card_get_kind(card.card)
 		groups[kind] += 1
 	}
 
 	// unique sets
 	collection_set := CardSet{}
 	for card in collection {
-		collection_set += {card}
+		collection_set += {card.card}
 	}
 	for yaku in YAKU_SETS {
 		if collection_set >= yaku {
