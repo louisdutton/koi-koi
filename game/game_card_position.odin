@@ -16,22 +16,20 @@ CardEntity :: struct {
 	flags:    CardFlags,
 }
 
-prepare_entities :: proc() -> (entities: [DECK_SIZE]CardEntity, count: int) {
-	i := 0
-
+prepare_entities :: proc() -> (entities: [dynamic]CardEntity) {
 	// player
 	player_hand := state.player.hand[:]
 	player_center := get_center(player_hand)
 	player_y := SCREEN_HEIGHT - PADDING - CARD_SIZE.y
 	for card, c in player_hand {
-		entities[i] = {
+		entity: CardEntity = {
 			card     = card,
 			position = Vec2{player_center + get_x_offset(c), player_y},
 		}
 		if c == state.hand_index {
-			entities[i].flags += {.Outline}
+			entity.flags += {.Outline}
 		}
-		i += 1
+		append(&entities, entity)
 	}
 
 	// opponent
@@ -39,12 +37,14 @@ prepare_entities :: proc() -> (entities: [DECK_SIZE]CardEntity, count: int) {
 	opponent_center := get_center(opponent_hand)
 	opponent_y: f32 = PADDING
 	for card, c in opponent_hand {
-		entities[i] = {
-			card     = card,
-			position = Vec2{opponent_center + get_x_offset(c), PADDING},
-			flags    = {.Hidden},
-		}
-		i += 1
+		append(
+			&entities,
+			CardEntity {
+				card = card,
+				position = Vec2{opponent_center + get_x_offset(c), PADDING},
+				flags = {.Hidden},
+			},
+		)
 	}
 
 	// table
@@ -52,25 +52,25 @@ prepare_entities :: proc() -> (entities: [DECK_SIZE]CardEntity, count: int) {
 	table_center := get_center(table_cards)
 	table_y := SCREEN_HEIGHT / 2 - CARD_SIZE.y / 2
 	for card, c in table_cards {
-		entities[i] = {
+		ntt: CardEntity = {
 			card     = card,
 			position = Vec2{table_center + get_x_offset(c), table_y},
 		}
 		#partial switch state.phase {
 		case .PlayerTable, .Flip:
 			if !slice.contains(state.matches[:], c) {
-				entities[i].flags += {.Faded}
+				ntt.flags += {.Faded}
 			}
 			if state.matches[state.table_index] == c {
-				entities[i].flags += {.Outline}
+				ntt.flags += {.Outline}
 			}
 		case .PlayerHand:
 			if len(state.player.hand) > 0 &&
 			   card_is_same_month(card, state.player.hand[state.hand_index]) {
-				entities[i].flags += {.Outline}
+				ntt.flags += {.Outline}
 			}
 		}
-		i += 1
+		append(&entities, ntt)
 	}
 
 	// collections
@@ -81,29 +81,33 @@ prepare_entities :: proc() -> (entities: [DECK_SIZE]CardEntity, count: int) {
 
 	// player collection
 	for card, c in state.player.collection {
-		entities[i] = {
-			card     = card,
-			position = Vec2 {
-				x_start - f32(TABLE_SPACING * (c % ROW_MAX)),
-				player_y + f32(c / ROW_MAX) * -dy,
+		append(
+			&entities,
+			CardEntity {
+				card = card,
+				position = Vec2 {
+					x_start - f32(TABLE_SPACING * (c % ROW_MAX)),
+					player_y + f32(c / ROW_MAX) * -dy,
+				},
 			},
-		}
-		i += 1
+		)
 	}
 
 	// opponent collection
 	for card, c in state.opponent.collection {
-		entities[i] = {
-			card     = card,
-			position = Vec2 {
-				x_start - f32(TABLE_SPACING * (c % ROW_MAX)),
-				opponent_y + f32(c / ROW_MAX) * dy,
+		append(
+			&entities,
+			CardEntity {
+				card = card,
+				position = Vec2 {
+					x_start - f32(TABLE_SPACING * (c % ROW_MAX)),
+					opponent_y + f32(c / ROW_MAX) * dy,
+				},
 			},
-		}
-		i += 1
+		)
 	}
 
-	return entities, i
+	return entities
 }
 
 @(private = "file")

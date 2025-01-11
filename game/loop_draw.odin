@@ -31,8 +31,9 @@ draw_play :: proc() {
 	draw_deck()
 
 	// individual cards
-	entities, count := prepare_entities()
-	for card, i in entities[:count] {
+	entities := prepare_entities()
+	defer delete(entities)
+	for card, i in entities[:] {
 		draw_card(card)
 	}
 
