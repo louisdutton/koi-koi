@@ -6,11 +6,11 @@ import "core:os"
 import "input"
 
 update :: proc(delta: f32, elapsed: f64) {
-	handle_input()
-	prepare_entities()
+	handle_input(elapsed)
+	prepare_entities(elapsed)
 }
 
-handle_input :: proc() {
+handle_input :: proc(elapsed: f64) {
 	pressed := input.get_pressed()
 
 	switch state.scene {
@@ -34,10 +34,14 @@ handle_input :: proc() {
 					state.player.hand[state.hand_index].card,
 					state.table[:],
 				)
+
+				card := state.player.hand[state.hand_index]
 				switch len(state.matches) {
 				case 0:
+					animate_card(card, {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2}, elapsed)
 					hand_play(&state.player, state.hand_index)
 				case 1:
+					animate_card(card, {SCREEN_WIDTH, SCREEN_HEIGHT - CARD_SIZE.y}, elapsed)
 					hand_play(&state.player, state.hand_index, state.matches[0])
 				case:
 					set_phase(.PlayerTable) // select from a list
@@ -51,6 +55,8 @@ handle_input :: proc() {
 			case .RIGHT:
 				shift_right(&state.table_index, len(state.matches))
 			case .SELECT:
+				card := state.player.hand[state.hand_index]
+				animate_card(card, {SCREEN_WIDTH, SCREEN_HEIGHT - CARD_SIZE.y}, elapsed)
 				hand_play(&state.player, state.hand_index, state.matches[state.table_index])
 			}
 
