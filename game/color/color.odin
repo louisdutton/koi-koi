@@ -14,3 +14,4 @@ RED :: raylib.RED
 BLUE :: raylib.BLUE
 GREEN :: raylib.GREEN
 YELLOW :: raylib.YELLOW
+PINK :: raylib.PINK

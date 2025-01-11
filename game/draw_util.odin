@@ -31,3 +31,19 @@ draw_start :: proc() {
 draw_end :: proc() {
 	raylib.EndDrawing()
 }
+
+// Draws a filled rectangle
+fill_rect :: proc(position, size: Vec2, color: color.Color) {
+	raylib.DrawRectangleV(position, size, color)
+}
+
+// Draws a texture
+draw_texture :: proc(
+	texture: Texture,
+	position: Vec2,
+	rotation: f32 = 0,
+	scale: f32 = 1,
+	tint := color.WHITE,
+) {
+	raylib.DrawTextureEx(texture, position, rotation, scale, tint)
+}
