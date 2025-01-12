@@ -9,7 +9,7 @@ TEXT_COLOUR :: color.WHITE
 FONT_CENTER_VERTICAL :: SCREEN_HEIGHT / 2 - FONT_SIZE / 2
 bg_overlay := color.fade(color.BLACK, 0.75)
 
-draw :: proc(dt: f32) {
+draw :: proc() {
 	draw_start()
 	defer draw_end()
 

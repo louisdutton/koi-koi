@@ -49,6 +49,10 @@ GameState :: struct {
 	// players
 	player:      Player,
 	opponent:    Player,
+
+	// time
+	elapsed:     f64,
+	delta:       f32,
 }
 
 state: GameState

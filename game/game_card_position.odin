@@ -3,13 +3,13 @@ package main
 import "core:math"
 import "core:slice"
 
-prepare_entities :: proc(elapsed: f64) {
+prepare_entities :: proc() {
 	// player
 	player_center := get_center(len(state.player.hand))
 	player_y := SCREEN_HEIGHT - PADDING - CARD_SIZE.y
 	for &card, i in state.player.hand {
 		if anim, anim_index, ok := get_animation(card.card); ok {
-			interpolant := f32((elapsed - anim.start) / (anim.end - anim.start))
+			interpolant := f32((state.elapsed - anim.start) / (anim.end - anim.start))
 			card.position = lerp_vec2(anim.from, anim.to, ease_out_expo(interpolant))
 			if interpolant >= 1 {
 				ordered_remove(&animations, anim_index)
@@ -28,7 +28,7 @@ prepare_entities :: proc(elapsed: f64) {
 	opponent_y: f32 = PADDING
 	for &card, i in state.opponent.hand {
 		if anim, anim_index, ok := get_animation(card.card); ok {
-			interpolant := f32((elapsed - anim.start) / (anim.end - anim.start))
+			interpolant := f32((state.elapsed - anim.start) / (anim.end - anim.start))
 			card.position = lerp_vec2(anim.from, anim.to, ease_out_expo(interpolant))
 			if interpolant >= 1 {
 				ordered_remove(&animations, anim_index)
@@ -44,7 +44,7 @@ prepare_entities :: proc(elapsed: f64) {
 	table_y := SCREEN_HEIGHT / 2 - CARD_SIZE.y / 2
 	for &card, i in state.table {
 		if anim, anim_index, ok := get_animation(card.card); ok {
-			interpolant := f32((elapsed - anim.start) / (anim.end - anim.start))
+			interpolant := f32((state.elapsed - anim.start) / (anim.end - anim.start))
 			card.position = lerp_vec2(anim.from, anim.to, ease_out_expo(interpolant))
 			if interpolant >= 1 {
 				ordered_remove(&animations, anim_index)
@@ -80,7 +80,7 @@ prepare_entities :: proc(elapsed: f64) {
 		card.flags = {}
 
 		if anim, anim_index, ok := get_animation(card.card); ok {
-			interpolant := f32((elapsed - anim.start) / (anim.end - anim.start))
+			interpolant := f32((state.elapsed - anim.start) / (anim.end - anim.start))
 			card.position = lerp_vec2(anim.from, anim.to, ease_out_expo(interpolant))
 			if interpolant >= 1 {
 				ordered_remove(&animations, anim_index)
@@ -98,7 +98,7 @@ prepare_entities :: proc(elapsed: f64) {
 		card.flags = {}
 
 		if anim, anim_index, ok := get_animation(card.card); ok {
-			interpolant := f32((elapsed - anim.start) / (anim.end - anim.start))
+			interpolant := f32((state.elapsed - anim.start) / (anim.end - anim.start))
 			card.position = lerp_vec2(anim.from, anim.to, ease_out_expo(interpolant))
 			if interpolant >= 1 {
 				ordered_remove(&animations, anim_index)

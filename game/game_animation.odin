@@ -30,9 +30,16 @@ lerp_vec2 :: proc(a, b: Vec2, t: f32) -> Vec2 {
 	return Vec2{math.lerp(a.x, b.x, t), math.lerp(a.y, b.y, t)}
 }
 
-animate_card :: proc(card: CardEntity, to: Vec2, start: f64) {
+animate_card :: proc(card: CardEntity, to: Vec2) {
+	duration :: 1
 	append(
 		&animations,
-		Animation{card = card.card, from = card.position, to = to, start = start, end = start + 1},
+		Animation {
+			card = card.card,
+			from = card.position,
+			to = to,
+			start = state.elapsed,
+			end = state.elapsed + duration,
+		},
 	)
 }

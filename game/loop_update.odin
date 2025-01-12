@@ -5,12 +5,16 @@ import "core:math"
 import "core:os"
 import "input"
 
-update :: proc(delta: f32, elapsed: f64) {
-	handle_input(elapsed)
-	prepare_entities(elapsed)
+PLAYER_COLLECTION_ANCHOR :: Vec2{SCREEN_WIDTH - CARD_SIZE.x, SCREEN_HEIGHT - CARD_SIZE.y}
+OPPONENT_COLLECTION_ANCHOR :: Vec2{SCREEN_WIDTH - CARD_SIZE.x, CARD_SIZE.y}
+TABLE_ANCHOR :: Vec2{SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2}
+
+update :: proc() {
+	handle_input()
+	prepare_entities()
 }
 
-handle_input :: proc(elapsed: f64) {
+handle_input :: proc() {
 	pressed := input.get_pressed()
 
 	switch state.scene {
@@ -38,11 +42,9 @@ handle_input :: proc(elapsed: f64) {
 				card := state.player.hand[state.hand_index]
 				switch len(state.matches) {
 				case 0:
-					animate_card(card, {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2}, elapsed)
 					hand_play(&state.player, state.hand_index)
 				case 1:
-					animate_card(card, {SCREEN_WIDTH, SCREEN_HEIGHT - CARD_SIZE.y}, elapsed)
-					hand_play(&state.player, state.hand_index, state.matches[0])
+					hand_match(&state.player, state.hand_index, state.matches[0])
 				case:
 					set_phase(.PlayerTable) // select from a list
 				}
@@ -55,9 +57,7 @@ handle_input :: proc(elapsed: f64) {
 			case .RIGHT:
 				shift_right(&state.table_index, len(state.matches))
 			case .SELECT:
-				card := state.player.hand[state.hand_index]
-				animate_card(card, {SCREEN_WIDTH, SCREEN_HEIGHT - CARD_SIZE.y}, elapsed)
-				hand_play(&state.player, state.hand_index, state.matches[state.table_index])
+				hand_match(&state.player, state.hand_index, state.matches[state.table_index])
 			}
 
 		case .Flip:
@@ -72,7 +72,11 @@ handle_input :: proc(elapsed: f64) {
 
 		case .OpponentHand:
 			hand_index, table_index := ai_play(state.opponent.hand[:])
-			hand_play(&state.opponent, hand_index, table_index)
+			if idx, ok := table_index.?; ok {
+				hand_match(&state.opponent, hand_index, idx)
+			} else {
+				hand_play(&state.opponent, hand_index)
+			}
 		}
 
 	case .GameOver:

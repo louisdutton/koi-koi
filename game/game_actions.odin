@@ -47,6 +47,7 @@ end_turn :: proc() {
 // ends the current turn on completion
 flip_play :: proc() {
 	log.debug("flip-play", state.phase, state.flip_card.card)
+	animate_card(state.flip_card, TABLE_ANCHOR)
 	append(&state.table, state.flip_card)
 	end_turn()
 }
@@ -54,31 +55,53 @@ flip_play :: proc() {
 // match the flipped card with a card on the table
 // ends the current turn on completion
 flip_match :: proc(player: ^Player, target_index: int) {
-	log.debug("flip-match", state.phase, state.flip_card.card, state.table[target_index].card)
-	append(&player.collection, state.flip_card, state.table[target_index])
+	table_card := state.table[target_index]
+	log.debug("flip-match", state.phase, state.flip_card.card, table_card.card)
+	animate_card(table_card, PLAYER_COLLECTION_ANCHOR)
+	animate_card(state.flip_card, PLAYER_COLLECTION_ANCHOR)
+	append(&player.collection, state.flip_card, table_card)
 	ordered_remove(&state.table, target_index)
 	end_turn()
 }
 
 // play a card from your hand.
 // optionally, match with a card on the table, adding both of them to your collection
-hand_play :: proc(player: ^Player, hand_index: int, table_index: Maybe(int) = nil) {
-	if index, ok := table_index.(int); ok {
-		log.debug("match", state.phase, player.hand[hand_index].card, state.table[index].card)
-		// add card to collection (twice)
-		append(&player.collection, player.hand[hand_index])
-		append(&player.collection, state.table[index])
+hand_play :: proc(player: ^Player, hand_index: int) {
+	hand_card := player.hand[hand_index]
+	log.debug("play", state.phase, hand_card.card)
 
-		// remove from table
-		ordered_remove(&state.table, index)
-		state.table_index = 0
-	} else {
-		log.debug("play", state.phase, player.hand[hand_index].card)
-	}
+	// add to table
+	append(&state.table, hand_card)
 
 	// remove from hand
 	ordered_remove(&player.hand, hand_index)
 	state.hand_index = 0
+
+	// animate
+	animate_card(hand_card, TABLE_ANCHOR)
+
+	// trigger next phase of the turn
+	start_flip(player)
+}
+
+hand_match :: proc(player: ^Player, hand_index, table_index: int) {
+	hand_card := player.hand[hand_index]
+	table_card := state.table[table_index]
+	log.debug("match", state.phase, hand_card.card, table_card.card)
+
+	// add cards to collection
+	append(&player.collection, hand_card)
+	append(&player.collection, table_card)
+
+	// remove from table
+	ordered_remove(&state.player.hand, hand_index)
+	ordered_remove(&state.table, table_index)
+	state.hand_index = 0
+	state.table_index = 0
+
+	// animate
+	animate_card(hand_card, PLAYER_COLLECTION_ANCHOR)
+	animate_card(table_card, PLAYER_COLLECTION_ANCHOR)
 
 	// trigger next phase of the turn
 	start_flip(player)

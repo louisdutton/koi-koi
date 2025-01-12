@@ -23,10 +23,10 @@ main :: proc() {
 
 	// life-cycle
 	for !should_exit() {
-		delta := engine.get_delta()
-		elapsed := engine.get_elapsed()
-		update(delta, elapsed)
-		draw(delta)
+		state.delta = engine.get_delta()
+		state.elapsed = engine.get_elapsed()
+		update()
+		draw()
 	}
 }
 
