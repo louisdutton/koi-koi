@@ -6,18 +6,24 @@ Yaku :: enum u8 {
 	BoarDearButterfly,
 	CherryBlossomViewing,
 	MoonViewing,
+	WrittenScrolls,
+	BlueScrolls,
 }
 
 YAKU_SETS :: [Yaku]CardSet {
 	.BoarDearButterfly    = {.Boar, .Deer, .Butterfly},
 	.CherryBlossomViewing = {.SakeCup, .Curtain},
 	.MoonViewing          = {.SakeCup, .FullMoon},
+	.WrittenScrolls       = {.JanScroll, .FebScroll, .MarScroll},
+	.BlueScrolls          = {.JunScroll, .SepScroll, .OctScroll},
 }
 
 YAKU_POINTS :: [Yaku]u8 {
 	.BoarDearButterfly    = 5,
 	.CherryBlossomViewing = 5,
 	.MoonViewing          = 5,
+	.WrittenScrolls       = 5,
+	.BlueScrolls          = 5,
 }
 
 collection_has_yaku :: proc(collection: []CardEntity) -> bool {
