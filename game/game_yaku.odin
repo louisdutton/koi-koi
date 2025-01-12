@@ -9,13 +9,13 @@ Yaku :: enum u8 {
 	MoonViewing,
 	WrittenScrolls,
 	BlueScrolls,
-	Scrolls,
-	Seeds,
-	Chaff,
+	//Scrolls,
+	//Seeds,
+	//Chaff,
 }
 
 // yaku for distinct sets of unique cards
-YAKU_SETS :: #partial [Yaku]CardSet {
+YAKU_SETS :: [Yaku]CardSet {
 	.BoarDearButterfly    = {.Boar, .Deer, .Butterfly},
 	.CherryBlossomViewing = {.SakeCup, .Curtain},
 	.MoonViewing          = {.SakeCup, .FullMoon},
@@ -30,9 +30,9 @@ YAKU_POINTS :: [Yaku]u8 {
 	.MoonViewing          = 5,
 	.WrittenScrolls       = 5,
 	.BlueScrolls          = 5,
-	.Scrolls              = 1,
-	.Seeds                = 1,
-	.Chaff                = 1,
+	//.Scrolls              = 1,
+	//.Seeds                = 1,
+	//.Chaff                = 1,
 }
 
 collection_has_yaku :: proc(collection: []CardEntity) -> bool {
