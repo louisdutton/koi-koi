@@ -24,18 +24,18 @@ Suit :: enum u8 {
 
 //odinfmt: disable
 Card :: enum u8 {
-  Jan0, Jan1, Jan2, Jan3,
-	Feb0, Feb1, Feb2, Feb3,
-	Mar0, Mar1, Mar2, Curtain,
-	Apr0, Apr1, Apr2, Apr3,
-	May0, May1, May2, May3,
-	Jun0, Jun1, Jun2, Butterfly,
-	Jul0, Jul1, Jul2, Boar,
-	Aug0, Aug1, Aug2, FullMoon,
-	Sep0, Sep1, Sep2, SakeCup,
-	Oct0, Oct1, Oct2, Deer,
-	Nov0, Nov1, Nov2, RainMan,
-	Dec0, Dec1, Dec2, Dec3,   
+  Stalk,     JanScroll, JanA,      JanB,
+	FebSeed,   FebScroll, FebA,      FebB,
+  Curtain,   MarScroll, MarA,      MarB,
+	AprSeed,   AprScroll, AprA,      AprB,
+	MaySeed,   MayScroll, MayA,      MayB,
+	Butterfly, JunScroll, JunA,      JunB,
+	Boar,      JulScroll, JulA,      JulB,
+	FullMoon,  AugSeed,   AugA,      AugB,
+	SakeCup,   SepScroll, SepA,      SepB,
+	Deer,      OctScroll, OctA,      OctB,
+	RainMan,   NovSeed,   NovScroll, NovA,
+	Phoenix,   DecA,      DecB,      DecC,   
 }
 //odinfmt: enable
 
@@ -43,74 +43,74 @@ CardSet :: distinct bit_set[Card]
 
 CARD_KINDS :: [Card]CardKind {
 	// January
-	.Jan0      = .Light,
-	.Jan1      = .Scroll,
-	.Jan2      = .Chaff,
-	.Jan3      = .Chaff,
+	.Stalk     = .Light,
+	.JanScroll = .Scroll,
+	.JanA      = .Chaff,
+	.JanB      = .Chaff,
 
 	// February
-	.Feb0      = .Seed,
-	.Feb1      = .Scroll,
-	.Feb2      = .Chaff,
-	.Feb3      = .Chaff,
+	.FebSeed   = .Seed,
+	.FebScroll = .Scroll,
+	.FebA      = .Chaff,
+	.FebB      = .Chaff,
 
 	// March
-	.Mar0      = .Light,
-	.Mar1      = .Scroll,
-	.Mar2      = .Chaff,
-	.Curtain   = .Chaff,
+	.Curtain   = .Light,
+	.MarScroll = .Scroll,
+	.MarA      = .Chaff,
+	.MarB      = .Chaff,
 
 	// April
-	.Apr0      = .Seed,
-	.Apr1      = .Scroll,
-	.Apr2      = .Chaff,
-	.Apr3      = .Chaff,
+	.AprSeed   = .Seed,
+	.AprScroll = .Scroll,
+	.AprA      = .Chaff,
+	.AprB      = .Chaff,
 
 	// May
-	.May0      = .Seed,
-	.May1      = .Scroll,
-	.May2      = .Chaff,
-	.May3      = .Chaff,
+	.MaySeed   = .Seed,
+	.MayScroll = .Scroll,
+	.MayA      = .Chaff,
+	.MayB      = .Chaff,
 
 	// June
-	.Jun0      = .Seed,
-	.Jun1      = .Scroll,
-	.Jun2      = .Chaff,
-	.Butterfly = .Chaff,
+	.Butterfly = .Seed,
+	.JunScroll = .Scroll,
+	.JunA      = .Chaff,
+	.JunB      = .Chaff,
 
 	// July
-	.Jul0      = .Seed,
-	.Jul1      = .Scroll,
-	.Jul2      = .Chaff,
-	.Boar      = .Chaff,
+	.Boar      = .Seed,
+	.JulScroll = .Scroll,
+	.JulA      = .Chaff,
+	.JulB      = .Chaff,
 
 	// August
-	.Aug0      = .Light,
-	.Aug1      = .Seed,
-	.Aug2      = .Chaff,
-	.FullMoon  = .Chaff,
+	.FullMoon  = .Light,
+	.AugSeed   = .Seed,
+	.AugA      = .Chaff,
+	.AugB      = .Chaff,
 
 	// September
-	.Sep0      = .Seed,
-	.Sep1      = .Scroll,
-	.Sep2      = .Chaff,
-	.SakeCup   = .Chaff,
+	.SakeCup   = .Seed,
+	.SepScroll = .Scroll,
+	.SepA      = .Chaff,
+	.SepB      = .Chaff,
 
 	// October
-	.Oct0      = .Seed,
-	.Oct1      = .Scroll,
-	.Oct2      = .Chaff,
-	.Deer      = .Chaff,
+	.Deer      = .Seed,
+	.OctScroll = .Scroll,
+	.OctA      = .Chaff,
+	.OctB      = .Chaff,
 
 	// November
-	.Nov0      = .Light,
-	.Nov1      = .Seed,
-	.Nov2      = .Scroll,
-	.RainMan   = .Chaff,
+	.RainMan   = .Light,
+	.NovSeed   = .Seed,
+	.NovScroll = .Scroll,
+	.NovA      = .Chaff,
 
 	// December
-	.Dec0      = .Light,
-	.Dec1      = .Chaff,
-	.Dec2      = .Chaff,
-	.Dec3      = .Chaff,
+	.Phoenix   = .Light,
+	.DecA      = .Chaff,
+	.DecB      = .Chaff,
+	.DecC      = .Chaff,
 }
