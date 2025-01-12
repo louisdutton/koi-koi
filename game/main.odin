@@ -21,6 +21,9 @@ main :: proc() {
 	load()
 	defer unload()
 
+	// start music
+	music_play()
+
 	// life-cycle
 	for !should_exit() {
 		state.delta = engine.get_delta()

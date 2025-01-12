@@ -8,6 +8,7 @@ import "vendor:raylib"
 load :: proc() {
 	load_window()
 	load_textures()
+	load_audio()
 	load_state()
 
 	// populate and shuffle deck
@@ -25,6 +26,13 @@ load :: proc() {
 	case hand_is_instant_win(state.opponent.hand[:]):
 		lose()
 	}
+}
+
+unload :: proc() {
+	unload_state()
+	unload_textures()
+	unload_audio()
+	unload_window()
 }
 
 // the number of cards dealt before moving on to the next recipient
