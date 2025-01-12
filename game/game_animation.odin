@@ -31,7 +31,7 @@ lerp_vec2 :: proc(a, b: Vec2, t: f32) -> Vec2 {
 }
 
 animate_card :: proc(card: CardEntity, to: Vec2) {
-	duration :: 1
+	duration :: 0.5
 	append(
 		&animations,
 		Animation {
