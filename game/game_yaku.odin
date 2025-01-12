@@ -2,15 +2,20 @@ package main
 
 import "core:log"
 
+// A set of cards
 Yaku :: enum u8 {
 	BoarDearButterfly,
 	CherryBlossomViewing,
 	MoonViewing,
 	WrittenScrolls,
 	BlueScrolls,
+	Scrolls,
+	Seeds,
+	Chaff,
 }
 
-YAKU_SETS :: [Yaku]CardSet {
+// yaku for distinct sets of unique cards
+YAKU_SETS :: #partial [Yaku]CardSet {
 	.BoarDearButterfly    = {.Boar, .Deer, .Butterfly},
 	.CherryBlossomViewing = {.SakeCup, .Curtain},
 	.MoonViewing          = {.SakeCup, .FullMoon},
@@ -18,12 +23,16 @@ YAKU_SETS :: [Yaku]CardSet {
 	.BlueScrolls          = {.JunScroll, .SepScroll, .OctScroll},
 }
 
+// points awarded for each yaku
 YAKU_POINTS :: [Yaku]u8 {
 	.BoarDearButterfly    = 5,
 	.CherryBlossomViewing = 5,
 	.MoonViewing          = 5,
 	.WrittenScrolls       = 5,
 	.BlueScrolls          = 5,
+	.Scrolls              = 1,
+	.Seeds                = 1,
+	.Chaff                = 1,
 }
 
 collection_has_yaku :: proc(collection: []CardEntity) -> bool {
