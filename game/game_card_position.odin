@@ -3,18 +3,23 @@ package main
 import "core:math"
 import "core:slice"
 
+@(private = "file")
+try_animate :: proc(card: ^CardEntity) -> bool {
+	anim, anim_index := get_animation(card.card) or_return
+	interpolant := f32((state.elapsed - anim.start) / (anim.end - anim.start))
+	card.position = lerp_vec2(anim.from, anim.to, ease_out_expo(interpolant))
+	if interpolant >= 1 {
+		ordered_remove(&animations, anim_index)
+	}
+	return true
+}
+
 prepare_entities :: proc() {
 	// player
 	player_center := get_center(len(state.player.hand))
 	player_y := SCREEN_HEIGHT - PADDING - CARD_SIZE.y
 	for &card, i in state.player.hand {
-		if anim, anim_index, ok := get_animation(card.card); ok {
-			interpolant := f32((state.elapsed - anim.start) / (anim.end - anim.start))
-			card.position = lerp_vec2(anim.from, anim.to, ease_out_expo(interpolant))
-			if interpolant >= 1 {
-				ordered_remove(&animations, anim_index)
-			}
-		} else {
+		if !try_animate(&card) {
 			card.position = Vec2{player_center + get_x_offset(i), player_y}
 		}
 		card.flags = {}
@@ -27,13 +32,7 @@ prepare_entities :: proc() {
 	opponent_center := get_center(len(state.opponent.hand))
 	opponent_y: f32 = PADDING
 	for &card, i in state.opponent.hand {
-		if anim, anim_index, ok := get_animation(card.card); ok {
-			interpolant := f32((state.elapsed - anim.start) / (anim.end - anim.start))
-			card.position = lerp_vec2(anim.from, anim.to, ease_out_expo(interpolant))
-			if interpolant >= 1 {
-				ordered_remove(&animations, anim_index)
-			}
-		} else {
+		if !try_animate(&card) {
 			card.position = Vec2{opponent_center + get_x_offset(i), PADDING}
 		}
 		card.flags = {.Hidden}
@@ -43,13 +42,7 @@ prepare_entities :: proc() {
 	table_center := get_center(len(state.table))
 	table_y := SCREEN_HEIGHT / 2 - CARD_SIZE.y / 2
 	for &card, i in state.table {
-		if anim, anim_index, ok := get_animation(card.card); ok {
-			interpolant := f32((state.elapsed - anim.start) / (anim.end - anim.start))
-			card.position = lerp_vec2(anim.from, anim.to, ease_out_expo(interpolant))
-			if interpolant >= 1 {
-				ordered_remove(&animations, anim_index)
-			}
-		} else {
+		if !try_animate(&card) {
 			card.position = Vec2{table_center + get_x_offset(i), table_y}
 		}
 		card.flags = {}
@@ -78,14 +71,7 @@ prepare_entities :: proc() {
 	// player collection
 	for &card, i in state.player.collection {
 		card.flags = {}
-
-		if anim, anim_index, ok := get_animation(card.card); ok {
-			interpolant := f32((state.elapsed - anim.start) / (anim.end - anim.start))
-			card.position = lerp_vec2(anim.from, anim.to, ease_out_expo(interpolant))
-			if interpolant >= 1 {
-				ordered_remove(&animations, anim_index)
-			}
-		} else {
+		if !try_animate(&card) {
 			card.position = {
 				X_START - f32(TABLE_SPACING * (i % ROW_MAX)),
 				player_y + f32(i / ROW_MAX) * -DY,
@@ -96,14 +82,7 @@ prepare_entities :: proc() {
 	// opponent collection
 	for &card, i in state.opponent.collection {
 		card.flags = {}
-
-		if anim, anim_index, ok := get_animation(card.card); ok {
-			interpolant := f32((state.elapsed - anim.start) / (anim.end - anim.start))
-			card.position = lerp_vec2(anim.from, anim.to, ease_out_expo(interpolant))
-			if interpolant >= 1 {
-				ordered_remove(&animations, anim_index)
-			}
-		} else {
+		if !try_animate(&card) {
 			card.position = {
 				X_START - f32(TABLE_SPACING * (i % ROW_MAX)),
 				opponent_y + f32(i / ROW_MAX) * DY,
