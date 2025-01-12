@@ -56,8 +56,17 @@ collection_has_yaku :: proc(collection: []CardEntity) -> bool {
 	}
 
 	// lights
-	if groups[.Light] >= 3 {
-		return true
+	switch {
+	case groups[.Light] == 3 && .RainMan not_in collection_set:
+		return true // Sanko (5)
+	case groups[.Light] == 4:
+		if .RainMan in collection_set {
+			return true // Ame Shiko (7)
+		} else {
+			return true // Shiko (8)
+		}
+	case groups[.Light] == 5:
+		return true // Goko (10)
 	}
 
 	// chaff
