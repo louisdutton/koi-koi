@@ -39,8 +39,6 @@ collection_has_yaku :: proc(collection: []CardEntity) -> bool {
 		}
 	}
 
-	log.debug(groups)
-
 	// 5 scrolls
 	if groups[.Scroll] >= 5 {
 		return true

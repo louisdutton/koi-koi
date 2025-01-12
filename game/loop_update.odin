@@ -80,8 +80,8 @@ handle_input :: proc() {
 		}
 
 	case .GameOver:
-		#partial switch pressed {
-		case .SELECT: state.scene = .Play
-		}
+	//#partial switch pressed {
+	//case .SELECT: state.scene = .Play
+	//}
 	}
 }

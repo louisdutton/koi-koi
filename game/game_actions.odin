@@ -46,7 +46,7 @@ end_turn :: proc() {
 // play the flipped card onto the table without matching
 // ends the current turn on completion
 flip_play :: proc() {
-	log.debug("flip-play", state.phase, state.flip_card.card)
+	log.debug(state.phase, "flip-play", state.flip_card.card)
 	animate_card(state.flip_card, TABLE_ANCHOR)
 	append(&state.table, state.flip_card)
 	end_turn()
@@ -56,7 +56,7 @@ flip_play :: proc() {
 // ends the current turn on completion
 flip_match :: proc(player: ^Player, target_index: int) {
 	table_card := state.table[target_index]
-	log.debug("flip-match", state.phase, state.flip_card.card, table_card.card)
+	log.debug(state.phase, "flip-match", [2]Card{state.flip_card.card, table_card.card})
 	animate_card(table_card, PLAYER_COLLECTION_ANCHOR)
 	animate_card(state.flip_card, PLAYER_COLLECTION_ANCHOR)
 	append(&player.collection, state.flip_card, table_card)
@@ -68,7 +68,7 @@ flip_match :: proc(player: ^Player, target_index: int) {
 // optionally, match with a card on the table, adding both of them to your collection
 hand_play :: proc(player: ^Player, hand_index: int) {
 	hand_card := player.hand[hand_index]
-	log.debug("play", state.phase, hand_card.card)
+	log.debug(state.phase, "play", hand_card.card)
 
 	// add to table
 	append(&state.table, hand_card)
@@ -87,14 +87,14 @@ hand_play :: proc(player: ^Player, hand_index: int) {
 hand_match :: proc(player: ^Player, hand_index, table_index: int) {
 	hand_card := player.hand[hand_index]
 	table_card := state.table[table_index]
-	log.debug("match", state.phase, hand_card.card, table_card.card)
+	log.debug(state.phase, "match", [2]Card{hand_card.card, table_card.card})
 
 	// add cards to collection
 	append(&player.collection, hand_card)
 	append(&player.collection, table_card)
 
 	// remove from table
-	ordered_remove(&state.player.hand, hand_index)
+	ordered_remove(&player.hand, hand_index)
 	ordered_remove(&state.table, table_index)
 	state.hand_index = 0
 	state.table_index = 0
