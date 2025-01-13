@@ -6,16 +6,9 @@ import "core:math"
 import "engine"
 import "vendor:raylib"
 
-LOGGER_OPTS := log.Options{.Level, .Terminal_Color}
-
 main :: proc() {
-	// logger
-	when ODIN_DEBUG {
-		logger := log.create_console_logger(.Debug, LOGGER_OPTS)
-	} else {
-		logger := log.create_console_logger(.Info, LOGGER_OPTS)
-	}
-	context.logger = logger
+	// logger assigned to global context
+	context.logger = create_logger()
 	defer log.destroy_console_logger(context.logger)
 
 	// setup / teardown
