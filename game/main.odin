@@ -31,3 +31,4 @@ main :: proc() {
 should_exit :: proc() -> bool {
 	return raylib.WindowShouldClose()
 }
+
