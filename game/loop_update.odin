@@ -1,5 +1,6 @@
 package main
 
+import "audio"
 import "core:log"
 import "core:math"
 import "core:os"
@@ -10,7 +11,7 @@ OPPONENT_COLLECTION_ANCHOR :: Vec2{SCREEN_WIDTH - CARD_SIZE.x, CARD_SIZE.y}
 TABLE_ANCHOR :: Vec2{SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2}
 
 update :: proc() {
-	music_update()
+	audio.music_update()
 	handle_input()
 	prepare_entities()
 }

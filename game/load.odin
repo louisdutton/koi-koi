@@ -1,5 +1,6 @@
 package main
 
+import "audio"
 import "core:log"
 import "core:math/rand"
 import "core:os"
@@ -8,7 +9,7 @@ import "vendor:raylib"
 load :: proc() {
 	load_window()
 	load_textures()
-	load_audio()
+	audio.load()
 	load_state()
 
 	// populate and shuffle deck
@@ -31,7 +32,7 @@ load :: proc() {
 unload :: proc() {
 	unload_state()
 	unload_textures()
-	unload_audio()
+	audio.unload()
 	unload_window()
 }
 

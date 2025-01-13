@@ -1,5 +1,6 @@
 package main
 
+import "audio"
 import "core:math"
 
 Animation :: struct {
@@ -31,6 +32,7 @@ lerp_vec2 :: proc(a, b: Vec2, t: f32) -> Vec2 {
 }
 
 animate_card :: proc(card: CardEntity, to: Vec2) {
+	audio.sfx_play(.Click)
 	duration :: 0.5
 	append(
 		&animations,

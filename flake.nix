@@ -43,6 +43,7 @@
                 lldb
                 resvg
                 go-task
+                ffmpeg
               ]);
           };
         }

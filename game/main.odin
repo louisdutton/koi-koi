@@ -1,5 +1,6 @@
 package main
 
+import "audio"
 import "core:log"
 import "core:math"
 import "engine"
@@ -22,7 +23,8 @@ main :: proc() {
 	defer unload()
 
 	// start music
-	music_play()
+	audio.music_set_volume(0.2)
+	audio.music_play()
 
 	// life-cycle
 	for !should_exit() {
