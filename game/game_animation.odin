@@ -3,6 +3,9 @@ package main
 import "audio"
 import "core:math"
 
+// the time taken to move a card from one location to another
+ANIMATION_DURATION :: 0.5
+
 Animation :: struct {
 	card:  Card,
 	from:  Vec2,
@@ -33,7 +36,7 @@ lerp_vec2 :: proc(a, b: Vec2, t: f32) -> Vec2 {
 
 animate_card :: proc(card: CardEntity, to: Vec2) {
 	audio.sfx_play(.Click)
-	duration :: 0.5
+	duration :: ANIMATION_DURATION
 	append(
 		&animations,
 		Animation {
