@@ -57,10 +57,13 @@ flip_play :: proc() {
 flip_match :: proc(player: ^Player, target_index: int) {
 	table_card := state.table[target_index]
 	log.debug(state.phase, "flip-match", [2]Card{state.flip_card.card, table_card.card})
-	animate_card(table_card, PLAYER_COLLECTION_ANCHOR)
+
+	// unique case where card is not coming from an existing group
 	animate_card(state.flip_card, PLAYER_COLLECTION_ANCHOR)
-	append(&player.collection, state.flip_card, table_card)
-	ordered_remove(&state.table, target_index)
+	append(&player.collection, state.flip_card)
+
+	move_card(&state.table, &player.collection, target_index)
+
 	end_turn()
 }
 
@@ -84,24 +87,25 @@ hand_play :: proc(player: ^Player, hand_index: int) {
 	start_flip(player)
 }
 
+move_card :: proc(from, to: ^[dynamic]CardEntity, index: int) {
+	card := from[index]
+	append(to, card)
+	ordered_remove(from, index)
+	animate_card(card, PLAYER_COLLECTION_ANCHOR)
+}
+
 hand_match :: proc(player: ^Player, hand_index, table_index: int) {
 	hand_card := player.hand[hand_index]
 	table_card := state.table[table_index]
 	log.debug(state.phase, "match", [2]Card{hand_card.card, table_card.card})
 
 	// add cards to collection
-	append(&player.collection, hand_card)
-	append(&player.collection, table_card)
+	move_card(&player.hand, &player.collection, hand_index)
+	move_card(&state.table, &player.collection, table_index)
 
-	// remove from table
-	ordered_remove(&player.hand, hand_index)
-	ordered_remove(&state.table, table_index)
+	// reset indices
 	state.hand_index = 0
 	state.table_index = 0
-
-	// animate
-	animate_card(hand_card, PLAYER_COLLECTION_ANCHOR)
-	animate_card(table_card, PLAYER_COLLECTION_ANCHOR)
 
 	// trigger next phase of the turn
 	start_flip(player)

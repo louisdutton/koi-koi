@@ -6,12 +6,17 @@ import "core:math"
 // the time taken to move a card from one location to another
 ANIMATION_DURATION :: 0.5
 
+EasingFunction :: proc(x: f32) -> f32
+CallbackFunction :: proc()
+
 Animation :: struct {
-	card:  Card,
-	from:  Vec2,
-	to:    Vec2,
-	start: f64,
-	end:   f64,
+	card:        Card,
+	from:        Vec2,
+	to:          Vec2,
+	start:       f64,
+	end:         f64,
+	ease:        EasingFunction,
+	on_complete: CallbackFunction,
 }
 
 // TODO delete once we have multiple scene
@@ -26,7 +31,7 @@ get_animation :: proc(card: Card) -> (Animation, int, bool) {
 	return {}, 0, false
 }
 
-ease_out_expo :: proc(x: $T) -> T {
+ease_out_expo :: proc(x: f32) -> f32 {
 	return x == 1 ? 1 : 1 - math.pow(2, -10 * x)
 }
 
@@ -45,6 +50,7 @@ animate_card :: proc(card: CardEntity, to: Vec2) {
 			to = to,
 			start = state.elapsed,
 			end = state.elapsed + duration,
+			ease = ease_out_expo,
 		},
 	)
 }

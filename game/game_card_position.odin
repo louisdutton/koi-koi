@@ -7,7 +7,7 @@ import "core:slice"
 try_animate :: proc(card: ^CardEntity) -> bool {
 	anim, anim_index := get_animation(card.card) or_return
 	interpolant := f32((state.elapsed - anim.start) / (anim.end - anim.start))
-	card.position = lerp_vec2(anim.from, anim.to, ease_out_expo(interpolant))
+	card.position = lerp_vec2(anim.from, anim.to, anim.ease(interpolant))
 	if interpolant >= 1 {
 		ordered_remove(&animations, anim_index)
 	}
